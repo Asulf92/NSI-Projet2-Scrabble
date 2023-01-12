@@ -1,0 +1,54 @@
+import unittest
+from scrabble import *
+
+Joueur_1 = Joueur()
+class Test_Joueur(unittest.TestCase):
+    def test_add_letters(self):
+        Joueur_1.add_letters()
+        #print(Joueur_1.letters)
+        self.assertTrue(len(Joueur_1.letters) == 7)
+
+    def test_add_points_if_no_point(self):
+        Joueur_1.add_points(20)
+        self.assertTrue(Joueur_1.points == 20)
+
+    def test_add_points_if_points(self):
+        Joueur_1.points = 10
+        Joueur_1.add_points(20)
+        self.assertTrue(Joueur_1.points == 30)
+    def test_remettre_en_orde(self):
+        Joueur_1.letters = ["g","f","e","d","c","b","a"]
+        Joueur_1.remettre_en_orde("abcdefg")
+        self.assertTrue(Joueur_1.letters == ['a', 'b', 'c', 'd', 'e', 'f', 'g'])
+
+# class Test_mots_et_lettre(unittest.TestCase):
+#     def test_validité_du_mot(self):
+#         mot_valable = ""
+#         mot_nn_valable = ""
+import unittest
+from scrabble import *
+
+Joueur_1 = Joueur()
+class Test_Joueur(unittest.TestCase):
+    def test_add_letters(self):
+        Joueur_1.add_letters()
+        #print(Joueur_1.letters)
+        self.assertTrue(len(Joueur_1.letters) == 7)
+
+    def test_add_points_if_no_point(self):
+        Joueur_1.add_points(20)
+        self.assertTrue(Joueur_1.points == 20)
+
+    def test_add_points_if_points(self):
+        Joueur_1.points = 10
+        Joueur_1.add_points(20)
+        self.assertTrue(Joueur_1.points == 30)
+    def test_remettre_en_orde(self):
+        Joueur_1.letters = ["g","f","e","d","c","b","a"]
+        Joueur_1.remettre_en_orde("abcdefg")
+        self.assertTrue(Joueur_1.letters == ['a', 'b', 'c', 'd', 'e', 'f', 'g'])
+
+# class Test_mots_et_lettre(unittest.TestCase):
+#     def test_validité_du_mot(self):
+#         mot_valable = ""
+#         mot_nn_valable = ""
