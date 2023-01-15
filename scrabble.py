@@ -1,7 +1,6 @@
 import random
-
-#tuple de l'alphabet permettant d'ajouter des lettres aux joueurs
-lettres_possibles = ('a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z')
+import csv
+import pygame
 
 class Joueur:#création d'une class Joueur contenant toutes les infos d'un joueur
     def __init__(self):#création des stats de base du joueur
@@ -17,10 +16,12 @@ class Joueur:#création d'une class Joueur contenant toutes les infos d'un joueu
 
     def remettre_en_orde(self,nouvel_ordre):#permet a l'utilisateur de remttre ces lettres dans l'orde qu'il veut
         self.letters = (list(nouvel_ordre))
+
 class Lettres:#création d'une classe lettres contenant la lettre ,le nombre de points
     def __init__(self,nom,points):
         self.nom = nom
         self.points = points
+
 #Création des les lettres possible avec le nombres de points correspondant
 lettres_1_points = ["A","E","I","N","O","R","S","T","U","L"]
 lettres_2_points = ["D","G","M"]
@@ -50,8 +51,96 @@ class Sac: #création du sac contenant toutes les lettres et n'etant pas infini
         return lettre_piocher
 
 sac = Sac()
+Joueur1 = Joueur()
 
+def mot_valible_verif(mot):#vérifier la validité d'un mot
+    with open('mots_acceptes.csv', 'r', encoding='utf-8') as fichier:
+        csv_reader = csv.reader(fichier)
+        for ligne in csv_reader:
+            if mot.upper() in ligne:
+                return True
+    return False
 
+def ajouter_au_mot_valides(mot):#ajoute le mot aux mots valides
+    with open('mots_acceptes.csv', 'a', encoding='utf-8') as fichier:
+        csv_writer = csv.writer(fichier)
+        csv_writer.writerow([mot.upper()])
 
+def ajouter_aux_mots_invalide(mot):#ajoute le mot aux mots invaldes
+    with open('mots_refuses.csv', 'a', encoding='utf-8') as fichier:
+        csv_writer = csv.writer(fichier)
+        csv_writer.writerow([mot])
+#coté utilisateur
+# mot_a_verif = input("Entrez le mot à vérifier: ")
 
+# if mot_valible_verif(mot_a_verif):
+#     print("Le mot est valide.")
+# else:
+#     ajout_mot = input("Le mot n'est pas valide. Voulez-vous l'ajouter à la liste des mots valides? (o/n)")
+#     if ajout_mot.lower() == 'o':
+#         ajouter_au_mot_valides(mot_a_verif)
+#         print("Le mot a été ajouté à la liste des mots valides.")
+#     else:
+#         ajouter_aux_mots_invalide(mot_a_verif)
+#         print("Le mot a été ajouté à la liste des mots refusés.")
+
+pygame.init()
+taille_fenetere = (800, 600)
+fenetre = pygame.display.set_mode(taille_fenetere)
+lettres = ["A", "M", "C", "D", "E"]
+u = 50
+position_lettres = []
+for i in range(len(lettres)):
+    x = (i * u) + 50
+    y = 50
+    position_lettres.append((x, y))
+font = pygame.font.SysFont('Comic Sans MS', 30)
+for i in range(len(lettres)):
+    letter = lettres[i]
+    position = position_lettres[i]
+    text = font.render(letter, True,(255,255,255))
+    fenetre.blit(text, position)
+pygame.display.flip()
+continuer = True
+lettre_select,old_position = None, None
+while continuer:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:#Pour quitter le jeu
+            continuer = False
+        
+        elif event.type == pygame.MOUSEBUTTONDOWN:#quand l'utilisateur clique sur son clique gauche on récupere la mosition de la souris
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+
+            for i in range(len(lettres)):#on verifie si ca correspond a la position d'une lettre 
+                x, y = position_lettres[i]
+                if (x <= mouse_x <= x + u) and (y <= mouse_y <= y + u):
+                    lettre_select = lettres[i]
+                    selected_letter_index = i
+
+        elif event.type == pygame.MOUSEBUTTONUP:#si l(utilisateur relache son clique gauche on recupere la position de la souris
+            mouse_x, mouse_y = pygame.mouse.get_pos()
+
+            for i in range(len(lettres)):#on vérifie que cette position correspond a la position d'une lettre et on les échanges
+                x, y = position_lettres[i]
+                if (x <= mouse_x <= x + u) and (y <= mouse_y <= y + u):
+                    lettres[selected_letter_index], lettres[i] = lettres[i], lettre_select
+                    lettre_select,old_x,old_y = None, None, None
+                    
+    if not(old_position == None):#efface la lettre qui se déplace pour éviter les traces(les fonctions sont dans cette ordres pour éviter que tous se superpose mal)
+            fenetre.fill((0, 0, 0), (old_position[0], old_position[1], 50, 50))
+    
+    for i in range(len(lettres)):#on redessine le nouvel ordres des lettres
+        x, y = position_lettres[i]
+        pygame.draw.rect(fenetre, (0, 0, 0), (x, y, u, u))
+        text = font.render(lettres[i], True, (255, 255, 255))
+        fenetre.blit(text,(x + (u // 2 - text.get_width() // 2), y + (u // 2 - text.get_height() // 2)))
+    
+    if not(lettre_select == None) :#La lettre suit la souris lors du déplacement de la lettre
+        mouse_x, mouse_y = pygame.mouse.get_pos()
+        text = font.render(lettre_select, True,(255,255,255))
+        position = (mouse_x,mouse_y)
+        old_position = (mouse_x, mouse_y)
+        fenetre.blit(text, position)
+
+    pygame.display.flip()
 
