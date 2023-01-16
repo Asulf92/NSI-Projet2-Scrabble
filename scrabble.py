@@ -86,24 +86,26 @@ def ajouter_aux_mots_invalide(mot):#ajoute le mot aux mots invaldes
 #         print("Le mot a été ajouté à la liste des mots refusés.")
 
 pygame.init()
-taille_fenetere = (800, 600)
+taille_fenetere = (790, 920)
+fond = pygame.image.load("grille_scrabble.png")
 fenetre = pygame.display.set_mode(taille_fenetere)
 lettres = []
+fenetre.blit(fond,(-3,0))
 for i in Joueur1.letters:
     lettres.append(i.nom)
 
 u = 50
 position_lettres = []
 for i in range(len(lettres)):
-    x = (i * u) + 50
-    y = 50
+    x = (i * u) + 230
+    y = 870
     position_lettres.append((x, y))
-font = pygame.font.SysFont('Comic Sans MS', 30)
-for i in range(len(lettres)):
-    letter = lettres[i]
-    position = position_lettres[i]
-    text = font.render(letter, True,(255,255,255))
-    fenetre.blit(text, position)
+font = pygame.font.SysFont('KAZYcase scrabble', 50)
+# for i in range(len(lettres)):
+#     letter = lettres[i]
+#     position = position_lettres[i]
+#     text = font.render(letter, True,(0,0,0))
+#     fenetre.blit(text, position)
 pygame.display.flip()
 continuer = True
 lettre_select,old_position = None, None
@@ -123,6 +125,7 @@ while continuer:
 
         elif event.type == pygame.MOUSEBUTTONUP:#si l(utilisateur relache son clique gauche on recupere la position de la souris
             mouse_x, mouse_y = pygame.mouse.get_pos()
+            print(mouse_x,mouse_y)
 
             for i in range(len(lettres)):#on vérifie que cette position correspond a la position d'une lettre et on les échanges
                 x, y = position_lettres[i]
@@ -135,16 +138,16 @@ while continuer:
 
     for i in range(len(lettres)):#on redessine le nouvel ordres des lettres
         x, y = position_lettres[i]
-        pygame.draw.rect(fenetre, (0, 0, 0), (x, y, u, u))
-        text = font.render(lettres[i], True, (255, 255, 255))
+        pygame.draw.rect(fenetre, (255,255,255), (x, y, u, u))
+        text = font.render(lettres[i], True, (0,0,0))
         fenetre.blit(text,(x + (u // 2 - text.get_width() // 2), y + (u // 2 - text.get_height() // 2)))
 
     if not(lettre_select == None) :#La lettre suit la souris lors du déplacement de la lettre
         mouse_x, mouse_y = pygame.mouse.get_pos()
-        text = font.render(lettre_select, True,(255,255,255))
+        text = font.render(lettre_select, True,(0,0,0))
         position = (mouse_x,mouse_y)
         old_position = (mouse_x, mouse_y)
         fenetre.blit(text, position)
-
+    fenetre.blit(fond,(0,0))
     pygame.display.flip()
 
