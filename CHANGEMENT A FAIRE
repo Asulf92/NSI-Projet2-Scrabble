@@ -1,12 +1,8 @@
-def création_bouton(texte,couleur_texte,x,y,largeur,longueur,couleur_rect):
-    font = pygame.font.SysFont('KAZYcase scrabble', 25)
-
-    text = font.render(texte, True, couleur_texte)
-
-    rect = pygame.Rect(x, y, largeur, longueur)
-
-    pygame.draw.rect(fenetre, couleur_rect, rect)
-
-    fenetre.blit(text, text.get_rect(center = rect.center))
-
-    return rect
+    font_pts = pygame.font.SysFont('KAZYcase scrabble', 30)
+    y_points=20
+    for i in Joueurs:
+        points="Points "+i.nom+" : "+str(i.points)
+        texte_points = font_pts.render(points, True, (255,255,255))
+        pygame.draw.rect(fenetre, (100,100,0), pygame.Rect(840, y_points, 200, 50))
+        fenetre.blit(texte_points, texte_points.get_rect(center = pygame.Rect(860, y_points, 150, 50).center))
+        y_points+=70
