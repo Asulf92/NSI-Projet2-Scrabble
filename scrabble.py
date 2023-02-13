@@ -469,7 +469,7 @@ def mot_valide_test():
     print("m=",mots_trouver)
 
 pygame.init()
-taille_fenetere = (840, 920)
+taille_fenetere = (1040, 920)
 fenetre = pygame.display.set_mode(taille_fenetere)
 fenetre.fill((128,128,0))#couleur du fond
 lettres = []
@@ -509,6 +509,8 @@ text_rect = text_valid.get_rect(center = button_tour_validé.center)
 button_tour_passe = pygame.Rect(65, 850, 150, 50)
 text_pass = font_boutton.render("passer votre tour", True, (255, 255, 255))
 text_rect_pass = text_pass.get_rect(center = button_tour_passe.center)
+# points="Points:"+str(Joueur_actuel.points)
+
 
 image_poubelle = pygame.image.load("icons8-poubelle-50.png")
 button_suppr_letres = pygame.Rect(0, 870, 50, 50)
@@ -517,6 +519,9 @@ text_rect_supr = text_pass.get_rect(center = button_suppr_letres.center)
 image_fleche = pygame.image.load('icons8-flèche-bas-50.png')
 button_ramene_lettre = pygame.Rect(775,850,50,50)
 text_rect_supr = text_pass.get_rect(center = button_ramene_lettre.center)
+
+
+
 
 
 #création des variables nécessaire pour la boucle principale
@@ -533,7 +538,7 @@ while continuer:#boucle principale du jeu
         if event.type == pygame.QUIT:#Pour quitter le jeu
             continuer = False
 
-        elif event.type == pygame.MOUSEBUTTONDOWN:#quand l'utilisateur clique sur son clique gauche on récupere la mosition de la souris
+        elif event.type == pygame.MOUSEBUTTONDOWN:#quand l'utilisateur clique sur son clique gauche on récupere la position de la souris
             mouse_x, mouse_y = pygame.mouse.get_pos()
             if button_tour_validé.collidepoint(event.pos):#vérifie si l'utilisateur clique sur le bouton tour validé
                 if mot_valide_test():
@@ -545,9 +550,9 @@ while continuer:#boucle principale du jeu
                 lettres,Joueur_actuel = changer_tour()
                 cacher_ecran_changement_tour(fenetre)
 
-                # compteur_tour += 1
-                # autorisation_poser_lettre,autorisation_suppr_lettre = True,True
-                # compteur_lettre_poser_dans_tour = 0
+                compteur_tour += 1
+                autorisation_poser_lettre,autorisation_suppr_lettre = True,True
+                compteur_lettre_poser_dans_tour = 0
                 #
                 # historique_cases = []
                 # historique_lettres
@@ -640,6 +645,18 @@ while continuer:#boucle principale du jeu
     fenetre.blit(text_pass, text_rect_pass)
     pygame.draw.rect(fenetre,(128, 128, 128),button_suppr_letres)
     fenetre.blit(image_poubelle, button_suppr_letres)
+    font_pts = pygame.font.SysFont('KAZYcase scrabble', 30)
+    y_points=20
+    for i in Joueurs:
+        points="Points "+i.nom+" : "+str(i.points)
+        texte_points = font_pts.render(points, True, (255,255,255))
+        pygame.draw.rect(fenetre, (100,100,0), pygame.Rect(840, y_points, 200, 50))
+        fenetre.blit(texte_points, texte_points.get_rect(center = pygame.Rect(860, y_points, 150, 50).center))
+        y_points+=70
+
+
+
+
     pygame.draw.rect(fenetre,(255, 0, 0),button_ramene_lettre)
     fenetre.blit(image_fleche,button_ramene_lettre)
     for lettre in lettres :#affiche les lettres
