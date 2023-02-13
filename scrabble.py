@@ -15,7 +15,7 @@ class Joueur:#création d'une class Joueur contenant toutes les infos d'un joueu
     def add_points(self,nbr_points_a_add):#rajoute des points (ou en enleve) au joueur
         self.points += nbr_points_a_add
 
-    def remettre_en_orde(self,nouvel_ordre):#permet a l'utilisateur de remttre ces lettres dans l'orde qu'il veut
+    def remettre_en_orde(self,nouvel_ordre):#permet a l'utilisateur de remettre ses lettres dans l'orde qu'il veut
         self.letters = (list(nouvel_ordre))
         self.letters = []
         global lettres_possible
@@ -29,7 +29,7 @@ class Lettres:#création d'une classe lettres contenant la lettre ,le nombre de 
         self.nom = nom
         self.points = points
 
-#Création des les lettres possible avec le nombres de points correspondant
+#Création des lettres possible avec le nombres de points correspondant
 lettres_possible = []
 lettres_1_points = ["A","E","I","N","O","R","S","T","U","L"]
 lettres_2_points = ["D","G","M"]
@@ -80,7 +80,7 @@ def ajouter_au_mot_valides(mot):#ajoute le mot aux mots valides
         csv_writer = csv.writer(fichier)
         csv_writer.writerow([mot.upper()])
 
-def ajouter_aux_mots_invalide(mot):#ajoute le mot aux mots invaldes
+def ajouter_aux_mots_invalide(mot):#ajoute le mot aux mots invalides
     with open('mots_refuses.csv', 'a', encoding='utf-8') as fichier:
         csv_writer = csv.writer(fichier)
         csv_writer.writerow([mot])
@@ -99,9 +99,9 @@ def ajouter_aux_mots_invalide(mot):#ajoute le mot aux mots invaldes
 #         print("Le mot a été ajouté à la liste des mots refusés.")
 
 
-class Lettres_visuel:#définition d'une class lettres visuel étant a part de la classe lettre et gérant juste la partie visuel des lettres
+class Lettres_visuel:#définition d'une classe lettres visuel étant a part de la classe lettre et gérant juste la partie visuel des lettres
     def __init__(self,nom,points):
-        self.nom = nom#nom est une chaine de caractère
+        self.nom = nom #nom est une chaine de caractère
         self.coord = (None,None)
         self.points = points
     def afficher_lettre(self,fenetre):#permet d'afficher la lettre a ses coordonée avec ses points
@@ -129,8 +129,8 @@ lettre_triple_case = ["B6", "B10", "F2", "F6", "F10", "F14","J2","J6","J10","J14
 mot_double_case = ["B2", "C3", "D4", "E5", "H8", "E11", "D12", "C13", "B14", "N2", "M3", "L4", "K5", "K11", "L12", "M13", "N14"]
 mot_triple_case =["A1", "A8", "A15", "H1", "H15", "O1", "O8", "O15"]
 #définition de toute les case spéciale
-alphabet = ("Z","A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M")
-nombres = ("0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16")
+alphabet = ("Z","A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M","N","O","P") #Z et P n'existent pas mais leur présence dans la liste et nécessaire pour après
+nombres = ("0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16") #Meme chose pour 0 et 16
 case_occupé = []
 case_possible = [["H8"],[]]
 compteur_lettre_poser_dans_tour = 0
@@ -150,7 +150,7 @@ def case_adjacente_a_une_case(nom_case,alphabet,nombres):
     case_adjacentes_chiffre=[case_bas,case_haut]
     return case_adjacentes_lettre,case_adjacentes_chiffre
 
-class Case_visuel:#définition de la class case visuel permettant de gérer leur viseul
+class Case_visuel:#définition de la class case visuel permettant de gérer leur visuel
 
     def __init__(self,nom,coord,hauteur,epaisseur):
 
@@ -325,8 +325,12 @@ def création_de_la_partie(fenetre):
 
         pygame.display.flip()
     joueurs = []
+    nomsjoueurs=[]
+    for i in range (0,nbr_joueur): #Demande le nom des joueurs DANS LA COMMANDE POUR L'INSTANT A CHANGER
+        nomjoueur=input(("Entrer le nom du joueur n°"+str(i+1)+": "))
+        nomsjoueurs.append(nomjoueur)
     for i in range (0,nbr_joueur):
-        joueurs.append(Joueur("Joueur "+str(i)))
+        joueurs.append(Joueur(nomsjoueurs[i]))
     return joueurs
 def changer_tour():#permet de changer de joueur a chaque tour et donc de changer les lettres a afficher
     global nbr_joueur , compteur_tour_Joueur
@@ -512,11 +516,11 @@ text_rect_pass = text_pass.get_rect(center = button_tour_passe.center)
 # points="Points:"+str(Joueur_actuel.points)
 
 
-image_poubelle = pygame.image.load("icons8-poubelle-50.png")
+#image_poubelle = pygame.image.load("icons8-poubelle-50.png")
 button_suppr_letres = pygame.Rect(0, 870, 50, 50)
 text_rect_supr = text_pass.get_rect(center = button_suppr_letres.center)
 
-image_fleche = pygame.image.load('icons8-flèche-bas-50.png')
+#image_fleche = pygame.image.load('icons8-flèche-bas-50.png')
 button_ramene_lettre = pygame.Rect(775,850,50,50)
 text_rect_supr = text_pass.get_rect(center = button_ramene_lettre.center)
 
@@ -644,7 +648,7 @@ while continuer:#boucle principale du jeu
     fenetre.blit(text_valid, text_rect)
     fenetre.blit(text_pass, text_rect_pass)
     pygame.draw.rect(fenetre,(128, 128, 128),button_suppr_letres)
-    fenetre.blit(image_poubelle, button_suppr_letres)
+    #fenetre.blit(image_poubelle, button_suppr_letres)
     font_pts = pygame.font.SysFont('KAZYcase scrabble', 30)
     y_points=20
     for i in Joueurs:
@@ -658,7 +662,7 @@ while continuer:#boucle principale du jeu
 
 
     pygame.draw.rect(fenetre,(255, 0, 0),button_ramene_lettre)
-    fenetre.blit(image_fleche,button_ramene_lettre)
+    #fenetre.blit(image_fleche,button_ramene_lettre)
     for lettre in lettres :#affiche les lettres
         lettre.afficher_lettre(fenetre)
     if len(lettres)!=7:#si il a moins de 7 lettres les remets d'affilé pour éviter les trous dans le porte-lettres
@@ -682,3 +686,4 @@ while continuer:#boucle principale du jeu
         lettre_select.suivre_souris(fenetre)
     #print(compteur_lettre_poser_dans_tour)
     pygame.display.flip()
+
