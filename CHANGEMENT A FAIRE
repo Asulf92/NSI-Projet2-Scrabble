@@ -1,8 +1,0 @@
-    font_pts = pygame.font.SysFont('KAZYcase scrabble', 30)
-    y_points=20
-    for i in Joueurs:
-        points="Points "+i.nom+" : "+str(i.points)
-        texte_points = font_pts.render(points, True, (255,255,255))
-        pygame.draw.rect(fenetre, (100,100,0), pygame.Rect(840, y_points, 200, 50))
-        fenetre.blit(texte_points, texte_points.get_rect(center = pygame.Rect(860, y_points, 150, 50).center))
-        y_points+=70
