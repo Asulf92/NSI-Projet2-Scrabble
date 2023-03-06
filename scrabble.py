@@ -369,7 +369,7 @@ def création_de_la_partie(fenetre):
             text_affiché=font.render(nomjoueur+" Invalide (trop long) ",True,(255,130,130))
         else:
             text_affiché=font.render(nomjoueur,True,(255,255,255))
-        fenetre.blit(text_affiché,(295,275))
+        fenetre.blit(text_affiché,(305,305))
         pygame.draw.rect(fenetre,(255,255,255),nom_carré,3)
         pygame.display.flip()
     for i in range (0,nbr_joueur):
