@@ -98,10 +98,10 @@ def ajouter_aux_mots_invalide(mot):#ajoute le mot aux mots invalides
 #         ajouter_aux_mots_invalide(mot_a_verif)
 #         print("Le mot a été ajouté à la liste des mots refusés.")
 
-score_du_mot = 0
+score_du_mot = 0	
 class Lettres_visuel:#définition d'une classe lettres visuel étant a part de la classe lettre et gérant juste la partie visuel des lettres
     def __init__(self,nom,points):
-        self.nom = nom#nom est une chaine de caractère
+        self.nom = nom #nom est une chaine de caractère
         self.coord = (None,None)
         self.points = points
     def afficher_lettre(self,fenetre):#permet d'afficher la lettre a ses coordonée avec ses points
@@ -130,7 +130,7 @@ mot_double_case = ["B2", "C3", "D4", "E5", "H8", "E11", "D12", "C13", "B14", "N2
 mot_triple_case =["A1", "A8", "A15", "H1", "H15", "O1", "O8", "O15"]
 #définition de toute les case spéciale
 alphabet = ("Z","A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M","N","O","P") #Z et P n'existent pas mais leur présence dans la liste et nécessaire pour après
-nombres = ("0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16") ##Meme chose pour 0 et 16
+nombres = ("0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16") #Meme chose pour 0 et 16
 case_occupé = []
 case_possible = [["H8"],[]]
 compteur_lettre_poser_dans_tour = 0
@@ -293,10 +293,10 @@ def création_de_la_partie(fenetre):
     text_3_j = font.render("3", True, (255, 255, 255))
     text_4_j = font.render("4", True, (255, 255, 255))
 
-    grand_carré = pygame.Rect(270, 310, 300, 150)
-    carre_2_j = pygame.Rect(310, 425, 60, 35)
-    carre_3_j = pygame.Rect(385, 425, 60, 35)
-    carre_4_j = pygame.Rect(460, 425, 60, 35)
+    grand_carré = pygame.Rect(270+50, 310, 300, 150)
+    carre_2_j = pygame.Rect(310+50, 425, 60, 35)
+    carre_3_j = pygame.Rect(385+50, 425, 60, 35)
+    carre_4_j = pygame.Rect(460+50, 425, 60, 35)
 
     pygame.draw.rect(fenetre, (0, 255, 0), grand_carré)
     fenetre.blit(text, text.get_rect(center = grand_carré.center))
@@ -334,9 +334,46 @@ def création_de_la_partie(fenetre):
         fenetre.blit(text_4_j, text_4_j.get_rect(center = carre_4_j.center))
 
         pygame.display.flip()
-    joueurs = []
+
+
+
+    nom_carré=pygame.Rect(300, 300, 400, 30)
+    nomjoueur=''
+    continuer=True
+    joueurs=[]
+    nomsjoueurs=[]
+    r=0
+    while continuer and r!=nbr_joueur:
+        fenetre.fill((128,128,128))
+        text=font.render("Entrez le nom des joueurs dans l'ordre de jeu et 8 caractères maximum",True,(255,255,255))
+        grand_carré=pygame.Rect(340,350,300,150)
+        pygame.draw.rect(fenetre,(128,128,128),grand_carré)
+        fenetre.blit(text, text.get_rect(center=grand_carré.center))
+        for i in range (0,nbr_joueur):
+            for event in pygame.event.get():
+                if event.type==pygame.QUIT:
+                    continuer=False
+                if event.type==pygame.KEYDOWN:
+                    if event.key==pygame.K_RETURN or event.key==pygame.K_KP_ENTER:
+                        if len(nomjoueur)<=8:
+                            nomsjoueurs.append(nomjoueur)
+                            nomjoueur=""
+                            r+=1
+                        else:
+                            nomjoueur=""
+                    elif event.key==pygame.K_BACKSPACE:
+                        nomjoueur=nomjoueur[:-1]
+                    else:
+                        nomjoueur+=event.unicode
+        if len(nomjoueur)>8:
+            text_affiché=font.render(nomjoueur+" Invalide (trop long) ",True,(255,130,130))
+        else:
+            text_affiché=font.render(nomjoueur,True,(255,255,255))
+        fenetre.blit(text_affiché,(295,275))
+        pygame.draw.rect(fenetre,(255,255,255),nom_carré,3)
+        pygame.display.flip()
     for i in range (0,nbr_joueur):
-        joueurs.append(Joueur("Joueur "+str(i)))
+        joueurs.append(Joueur(nomsjoueurs[i]))
     return joueurs
 def changer_tour():#permet de changer de joueur a chaque tour et donc de changer les lettres a afficher
     global nbr_joueur , compteur_tour_Joueur
