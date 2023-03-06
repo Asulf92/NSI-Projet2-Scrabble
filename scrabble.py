@@ -68,9 +68,9 @@ class Sac: #création du sac contenant toutes les lettres et n'etant pas infini
 sac = Sac()
 
 def mot_valible_verif(mot):#vérifier la validité d'un mot
-    with open('mots_acceptes.csv', 'r', encoding='utf-8') as fichier:
+    with open('t_mot (2).csv', 'r', encoding='utf-8') as fichier:
 
-        for ligne in csv_reader:
+        for ligne in fichier:
             if mot.upper() in ligne:
                 return True
     return False
@@ -98,10 +98,10 @@ def ajouter_aux_mots_invalide(mot):#ajoute le mot aux mots invalides
 #         ajouter_aux_mots_invalide(mot_a_verif)
 #         print("Le mot a été ajouté à la liste des mots refusés.")
 
-
+score_du_mot = 0
 class Lettres_visuel:#définition d'une classe lettres visuel étant a part de la classe lettre et gérant juste la partie visuel des lettres
     def __init__(self,nom,points):
-        self.nom = nom #nom est une chaine de caractère
+        self.nom = nom#nom est une chaine de caractère
         self.coord = (None,None)
         self.points = points
     def afficher_lettre(self,fenetre):#permet d'afficher la lettre a ses coordonée avec ses points
@@ -130,7 +130,7 @@ mot_double_case = ["B2", "C3", "D4", "E5", "H8", "E11", "D12", "C13", "B14", "N2
 mot_triple_case =["A1", "A8", "A15", "H1", "H15", "O1", "O8", "O15"]
 #définition de toute les case spéciale
 alphabet = ("Z","A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M","N","O","P") #Z et P n'existent pas mais leur présence dans la liste et nécessaire pour après
-nombres = ("0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16") #Meme chose pour 0 et 16
+nombres = ("0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16") ##Meme chose pour 0 et 16
 case_occupé = []
 case_possible = [["H8"],[]]
 compteur_lettre_poser_dans_tour = 0
@@ -150,7 +150,7 @@ def case_adjacente_a_une_case(nom_case,alphabet,nombres):
     case_adjacentes_chiffre=[case_bas,case_haut]
     return case_adjacentes_lettre,case_adjacentes_chiffre
 
-class Case_visuel:#définition de la class case visuel permettant de gérer leur visuel
+class Case_visuel:#définition de la classe case visuel permettant de gérer leur visuel
 
     def __init__(self,nom,coord,hauteur,epaisseur):
 
@@ -160,20 +160,30 @@ class Case_visuel:#définition de la class case visuel permettant de gérer leur
         self.epaisseur = epaisseur
         self.occupé = None
         self.tour_occupé = None
-        def définir_couleur_case_bonus(nom_case) :
-            global lettre_double_case,lettre_triple_case,mot_double_case,mot_triple_case
-            if nom_case in lettre_double_case:
-                return (135,206,235)
-            elif nom_case in lettre_triple_case:
-                return (0,0,139)
-            elif nom_case == "H8":
-                return (255,255,0)
-            elif nom_case in mot_double_case :
-                return (255, 192, 203)
-            elif nom_case in mot_triple_case :
-                return (255, 0, 0)
-            return (255,255,255)
-        self.couleur = définir_couleur_case_bonus(self.nom)
+        if self.nom in lettre_double_case:
+            self.couleur = (135,206,235)
+            self.multiplicateur_lettre = 2
+            self.multiplicateur_mot = 1
+        elif self.nom in lettre_triple_case:
+            self.couleur = (0,0,139)
+            self.multiplicateur_lettre = 3
+            self.multiplicateur_mot = 1
+        elif self.nom == "H8":
+            self.multiplicateur_lettre = 1
+            self.multiplicateur_mot = 2
+            self.couleur = (255,255,0)
+        elif self.nom in mot_double_case :
+            self.multiplicateur_lettre = 1
+            self.multiplicateur_mot = 2
+            self.couleur = (255, 192, 203)
+        elif self.nom in mot_triple_case :
+            self.multiplicateur_lettre = 1
+            self.multiplicateur_mot = 3
+            self.couleur = (255, 0, 0)
+        else:
+            self.multiplicateur_lettre = 1
+            self.multiplicateur_mot = 1
+            self.couleur = (255,255,255)
     def vérif_relachement_sur_case_plus_ajout_lettre(self,position,lettre_select,case_adjacentes_possible):#vérifie si la position de la souris lors du relachement corespond aux coordonées de la case
         coord_x , coord_y = self.coord[0],self.coord[1]
         global compteur_lettre_poser_total , case_occupé ,case_possible,compteur_lettre_poser_dans_tour,nom_derniere_case_prise,case_poser_ce_tour
@@ -325,12 +335,8 @@ def création_de_la_partie(fenetre):
 
         pygame.display.flip()
     joueurs = []
-    nomsjoueurs=[]
-    for i in range (0,nbr_joueur): #Demande le nom des joueurs DANS LA COMMANDE POUR L'INSTANT A CHANGER
-        nomjoueur=input(("Entrer le nom du joueur n°"+str(i+1)+": "))
-        nomsjoueurs.append(nomjoueur)
     for i in range (0,nbr_joueur):
-        joueurs.append(Joueur(nomsjoueurs[i]))
+        joueurs.append(Joueur("Joueur "+str(i)))
     return joueurs
 def changer_tour():#permet de changer de joueur a chaque tour et donc de changer les lettres a afficher
     global nbr_joueur , compteur_tour_Joueur
@@ -366,111 +372,130 @@ def cacher_ecran_changement_tour(fenetre):
         fenetre.blit(message_surface, message_rect)
         pygame.display.flip()
 def mot_valide_test():
-    def remonter_premier_lettre(avance,case):
-        place_case_dans_cases_existantes = cases_existantes.index(case)
-        case_actuellement_test = case
-        case_actuellement_test = cases_existantes[place_case_dans_cases_existantes-avance]
-        index_case_actuellement_test = cases_existantes.index(case_actuellement_test)
-        while not(case_actuellement_test.occupé == None) and index_case_actuellement_test-avance >=0 :
-            case_actuellement_test = cases_existantes[index_case_actuellement_test-avance]
+    def trouver_mot_ecris():
+        def remonter_premier_lettre(avance,case):
+            place_case_dans_cases_existantes = cases_existantes.index(case)
+            case_actuellement_test = case
+            case_actuellement_test = cases_existantes[place_case_dans_cases_existantes-avance]
             index_case_actuellement_test = cases_existantes.index(case_actuellement_test)
-        case_actuellement_test = cases_existantes[index_case_actuellement_test+avance]
-        return case_actuellement_test
-    def interpreter_le_mot(avance,case_actuellement_test,compteur_tour,continuee):
-        prout = []
-        mot_composé_actuellement = []
-        while not(case_actuellement_test.occupé == None):
-            index_case_actuellement_test_b = None
-
-            mot_composé_actuellement.append(case_actuellement_test.occupé.nom)
-            index_case_actuellement_test = cases_existantes.index(case_actuellement_test)
+            while not(case_actuellement_test.occupé == None) and index_case_actuellement_test-avance >=0 :
+                case_actuellement_test = cases_existantes[index_case_actuellement_test-avance]
+                index_case_actuellement_test = cases_existantes.index(case_actuellement_test)
             case_actuellement_test = cases_existantes[index_case_actuellement_test+avance]
-            if case_actuellement_test.tour_occupé == compteur_tour and continuee:
-                mots_intermédiaire = []
-                if avance == 1:
-                    avance_2 = 15
-                elif avance == 15:
-                    avance_2 = 1
+            return case_actuellement_test
+        def interpreter_le_mot(avance,case_actuellement_test,compteur_tour,continuee):
+            mots_comp = []
+            score_du_mot = 0
+            mot_composé_actuellement = []
+            while not(case_actuellement_test.occupé == None):
+                index_case_actuellement_test_b = None
 
-                if index_case_actuellement_test_b == None:
-                    case_actuellement_test_b = cases_existantes[index_case_actuellement_test+avance]
-                else :
-                    case_actuellement_test_b = cases_existantes[index_case_actuellement_test_b+avance]
-                case_actuellement_test_a = remonter_premier_lettre(avance_2,case_actuellement_test_b)
-                mots_intermédiaire += interpreter_le_mot(avance_2,case_actuellement_test_a,compteur_tour,False)
-                for p in mots_intermédiaire:
-                    if p == []:
-                        mots_intermédiaire.remove(p)
-                index_case_actuellement_test_b = cases_existantes.index(case_actuellement_test_b)
-                if len(mots_intermédiaire) > 1:
-                    mot_composé_actuellement.append(mots_intermédiaire)
-        if len(mot_composé_actuellement) > 1:
-            # mot_principal=[[]]
-            # for m in mot_composé_actuellement:
-            #     if not(type(m) == list):
-            #         mot_principal[0].append(m)
-            #         mot_composé_actuellement.remove(m)
-            # if not(mot_principal[0] == []):
-            #     mot_composé_actuellement+= mot_principal
-            # mot_composé_actuellement = [mot_composé_actuellement]
-            # mot_composé_actuellement += [prout]
-            #print(mot_composé_actuellement,prout)
-            iei = []
-            for i in mot_composé_actuellement:
-                if type(i) == str:
-                    iei.append(i)
-                    #mot_composé_actuellement.remove(i)
-            mot_composé_actuellement.append(iei)
-            return mot_composé_actuellement
-        return []
+                mot_composé_actuellement.append(case_actuellement_test.occupé.nom)
+                score_du_mot += case_actuellement_test.occupé.points * case_actuellement_test.multiplicateur_lettre
+                print(score_du_mot)
+                index_case_actuellement_test = cases_existantes.index(case_actuellement_test)
+                case_actuellement_test = cases_existantes[index_case_actuellement_test+avance]
+                if case_actuellement_test.tour_occupé == compteur_tour and continuee:
+                    mots_intermédiaire = []
+                    if avance == 1:
+                        avance_2 = 15
+                    elif avance == 15:
+                        avance_2 = 1
 
-    mots_trouver = []
-    global cases_existantes
-    for i in cases_existantes:
-        if i.tour_occupé == compteur_tour:
-            place_case_dans_cases_existantes = cases_existantes.index(i)
-            case_au_dessus = cases_existantes[place_case_dans_cases_existantes-15]
-            case_a_gauche = cases_existantes[place_case_dans_cases_existantes-1]
-            nom_case_lettre = i.nom[0]
-            nom_case_nombre = i.nom[1:]
-            if not(case_au_dessus == None) and not(nom_case_lettre == "A"):
-                case_actuellement_test = remonter_premier_lettre(15,i)
-                mots_trouver.append(interpreter_le_mot(15,case_actuellement_test,compteur_tour,True))
-                # case_actuellement_test = i
-                # case_actuellement_test = cases_existantes[place_case_dans_cases_existantes-15]
-                # index_case_actuellement_test = cases_existantes.index(case_actuellement_test)
-                # while not(case_actuellement_test.occupé == None) and index_case_actuellement_test-15 >=0 :
-                #     case_actuellement_test = cases_existantes[index_case_actuellement_test-15]
-                #     index_case_actuellement_test = cases_existantes.index(case_actuellement_test)
-                # case_actuellement_test = cases_existantes[index_case_actuellement_test+15]
-                # while not(case_actuellement_test.occupé == None):
-                #     mot_composé_actuellement.append(case_actuellement_test.occupé.nom)
-                #     index_case_actuellement_test = cases_existantes.index(case_actuellement_test)
-                #     case_actuellement_test = cases_existantes[index_case_actuellement_test+15]
-                # if len(mot_composé_actuellement) > 1:
-                #     mots_trouver.append(mot_composé_actuellement)
-            if not(case_au_dessus == None) and not(nom_case_lettre == "1"):
-                case_actuellement_test = remonter_premier_lettre(1,i)
-                mots_trouver.append(interpreter_le_mot(1,case_actuellement_test,compteur_tour,True))
-                # mot_composé_actuellement = []
-                # case_actuellement_test = i
-                # case_actuellement_test = cases_existantes[place_case_dans_cases_existantes-1]
-                # index_case_actuellement_test = cases_existantes.index(case_actuellement_test)
-                # while not(case_actuellement_test.occupé == None) and index_case_actuellement_test-1 >=0 :
-                #     case_actuellement_test = cases_existantes[index_case_actuellement_test-1]
-                #     index_case_actuellement_test = cases_existantes.index(case_actuellement_test)
-                # case_actuellement_test = cases_existantes[index_case_actuellement_test+1]
-                # while not(case_actuellement_test.occupé == None):
-                #     mot_composé_actuellement.append(case_actuellement_test.occupé.nom)
-                #     index_case_actuellement_test = cases_existantes.index(case_actuellement_test)
-                #     case_actuellement_test = cases_existantes[index_case_actuellement_test+1]
-                #     if case_actuellement_test.tour_occupé == compteur_tour:
-                #
-                # if len(mot_composé_actuellement) > 1:
-                #     mots_trouver.append(mot_composé_actuellement)
-            break
+                    if index_case_actuellement_test_b == None:
+                        case_actuellement_test_b = cases_existantes[index_case_actuellement_test+avance]
+                    else :
+                        case_actuellement_test_b = cases_existantes[index_case_actuellement_test_b+avance]
+                    case_actuellement_test_a = remonter_premier_lettre(avance_2,case_actuellement_test_b)
+                    mots_intermédiaire += interpreter_le_mot(avance_2,case_actuellement_test_a,compteur_tour,False)
+                    for p in mots_intermédiaire:
+                        if p == []:
+                            mots_intermédiaire.remove(p)
+                    index_case_actuellement_test_b = cases_existantes.index(case_actuellement_test_b)
+                    if not(mots_intermédiaire==[]):
+                        mots_comp += mots_intermédiaire
+            if len(mot_composé_actuellement) > 1:
+                print(score_du_mot)
+                Joueur_actuel.points += score_du_mot
+                mot_composé_actuellement = [mot_composé_actuellement]
+                mot_composé_actuellement += mots_comp
+                print("tttt=",mot_composé_actuellement)
+                return mot_composé_actuellement
+            return []
+        mots_trouver = []
+        global cases_existantes
+        for i in cases_existantes:
+            if i.tour_occupé == compteur_tour:
+                place_case_dans_cases_existantes = cases_existantes.index(i)
+                case_au_dessus = cases_existantes[place_case_dans_cases_existantes-15]
+                case_a_gauche = cases_existantes[place_case_dans_cases_existantes-1]
+                nom_case_lettre = i.nom[0]
+                nom_case_nombre = i.nom[1:]
+                if not(case_au_dessus == None) and not(nom_case_lettre == "A"):
+                    case_actuellement_test = remonter_premier_lettre(15,i)
+                    mot_trouver = interpreter_le_mot(15,case_actuellement_test,compteur_tour,True)
+                    mots_trouver.append(mot_trouver)
+                if not(case_au_dessus == None) and not(nom_case_lettre == "1"):
+                    case_actuellement_test = remonter_premier_lettre(1,i)
+                    mots_trouver.append(interpreter_le_mot(1,case_actuellement_test,compteur_tour,True))
+                break
+        # if len(mots_trouver[1]) == 0 or len(mots_trouver[1]) == 0:
+        #     return []
+        if len(mots_trouver[0]) > len(mots_trouver[1]):
+            mots_trouver = mots_trouver[0]
+        elif len(mots_trouver[1])>len(mots_trouver[0]):
+            mots_trouver = mots_trouver[1]
+        return mots_trouver
+    def vérif_validité_des_mots(lst_mots):
+        for i in lst_mots:
+            mot_test_actuel = str(i)
+            if mot_valible_verif(mot_test_actuel):
+                pass
+            else :
+                font = pygame.font.SysFont('KAZYcase scrabble', 25)
+                text = font.render("Voulez vous ajouter ce mot au dictionnaire", True, (255, 255, 255))
+                text_oui = font.render("oui", True, (255, 255, 255))
+                text_non = font.render("non", True, (255, 255, 255))
 
-    print("m=",mots_trouver)
+                grand_carré = pygame.Rect(270, 310, 300, 150)
+                carr_oui = pygame.Rect(310, 425, 60, 35)
+                carr_non = pygame.Rect(385, 425, 60, 35)
+
+                pygame.draw.rect(fenetre, (0, 255, 0), grand_carré)
+                fenetre.blit(text, text.get_rect(center = grand_carré.center))
+                pygame.draw.rect(fenetre, (0, 0, 0), carr_oui)
+                fenetre.blit(text_oui, text_oui.get_rect(center = carr_oui.center))
+                pygame.draw.rect(fenetre, (0, 0, 0), carr_non)
+                fenetre.blit(text_non, text_non.get_rect(center = carr_non.center))
+                continuer = True
+                while continuer:
+                    fenetre.fill((128,128,0))
+                    for event in pygame.event.get():
+                        if event.type == pygame.QUIT:#Pour quitter le jeu
+                            continuer = False
+                        elif event.type == pygame.MOUSEBUTTONDOWN:#quand l'utilisateur clique sur son clique gauche on récupere la mosition de la souris
+                            if carr_oui.collidepoint(event.pos):
+                                continuer = False
+                                nbr_joueur = 2
+                            if carr_non.collidepoint(event.pos):
+                                continuer = False
+                                nbr_joueur = 3
+
+                    pygame.draw.rect(fenetre, (0, 255, 0), grand_carré)
+                    fenetre.blit(text, text.get_rect(center = grand_carré.center))
+                    pygame.draw.rect(fenetre, (0, 0, 0), carr_non)
+                    fenetre.blit(text_oui, text_oui.get_rect(center = carr_oui.center))
+                    pygame.draw.rect(fenetre, (0, 0, 0), carr_non)
+                    fenetre.blit(text_non, text_non.get_rect(center = carr_non.center))
+                    pygame.display.flip()
+
+    a = trouver_mot_ecris()
+    print("a=",a)
+    vérif_validité_des_mots(a)
+def ramener_lettre(lettres_début_tour,cases_debut_tour):
+    return lettres_début_tour,cases_debut_tour
+
+
 
 pygame.init()
 taille_fenetere = (1040, 920)
@@ -484,7 +509,7 @@ for u in Joueurs:
 for i in Joueurs[0].letters:#création des objets lettres_visuel
     if i not in lettres:
         locals()[i.nom]=Lettres_visuel(i.nom,i.points)
-    lettres.append(locals()[i.nom])
+    lettres.append(Lettres_visuel(i.nom,i.points))
 épaisseur_et_hauteur_lettres = 50
 for i in range(len(lettres)):#création des coordonée des lettres
     x = (i * épaisseur_et_hauteur_lettres) + 230
@@ -501,7 +526,7 @@ for i in range(1, 16):#création des objets case_visuel avec les bonnes coordon�
         coord[0] += 2
         cases_existantes.append(Case_visuel(nom, (coord[0], coord[1] + 2), 50, 50))
         coord[0] += 53
-
+font_pts = pygame.font.SysFont('KAZYcase scrabble', 30)
 font = pygame.font.SysFont('KAZYcase scrabble', 50)
 pygame.display.flip()
 
@@ -513,8 +538,6 @@ text_rect = text_valid.get_rect(center = button_tour_validé.center)
 button_tour_passe = pygame.Rect(65, 850, 150, 50)
 text_pass = font_boutton.render("passer votre tour", True, (255, 255, 255))
 text_rect_pass = text_pass.get_rect(center = button_tour_passe.center)
-# points="Points:"+str(Joueur_actuel.points)
-
 
 #image_poubelle = pygame.image.load("icons8-poubelle-50.png")
 button_suppr_letres = pygame.Rect(0, 870, 50, 50)
@@ -525,9 +548,6 @@ button_ramene_lettre = pygame.Rect(775,850,50,50)
 text_rect_supr = text_pass.get_rect(center = button_ramene_lettre.center)
 
 
-
-
-
 #création des variables nécessaire pour la boucle principale
 Joueur_actuel = Joueurs[0]
 lettre_select= None
@@ -536,7 +556,10 @@ compteur_tour = 0
 autorisation_poser_lettre,autorisation_suppr_lettre,autorisation_passer_tour = True,True,True
 case_adjacentes_possible = []
 continuer = True
+historique_cases = list(cases_existantes)
+historique_lettres = list(Joueur_actuel.letters)
 while continuer:#boucle principale du jeu
+    
     fenetre.fill((128,128,0))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:#Pour quitter le jeu
@@ -547,7 +570,7 @@ while continuer:#boucle principale du jeu
             if button_tour_validé.collidepoint(event.pos):#vérifie si l'utilisateur clique sur le bouton tour validé
                 if mot_valide_test():
                     Joueur_actuel.add_letters()
-                    lettres,Joueur_actuel = changer_tour(fe)
+                    lettres,Joueur_actuel = changer_tour(fenetre)
 
             elif button_tour_passe.collidepoint(event.pos):#vérifie si l'utilisateur clique sur le bouton passer le tour
                 Joueur_actuel.add_letters()
@@ -557,7 +580,7 @@ while continuer:#boucle principale du jeu
                 compteur_tour += 1
                 autorisation_poser_lettre,autorisation_suppr_lettre = True,True
                 compteur_lettre_poser_dans_tour = 0
-                #
+                
                 # historique_cases = []
                 # historique_lettres
                 # historique_joueur = None
@@ -566,31 +589,8 @@ while continuer:#boucle principale du jeu
                 # for u in cases_existantes :
                 #     historique_cases.append(u)
                 # historique_joueur = Joueur_actuel
-            # elif button_ramene_lettre.collidepoint(event.pos):
-            #     print("éaaa")
-            #     aa = []
-            #     bb = []
-            #     cc = []
-            #     for i in historique_lettres:
-            #         aa.append(i.nom)
-            #     for i in lettres:
-            #         bb.append(i.nom)
-            #     # print(aa)
-            #     # print(bb)
-            #     lettres = []
-            #     for i in historique_lettres:
-            #         lettres.append(i)
-            #     pygame.draw.rect(fenetre, (0, 255, 0), pygame.Rect(230, 870, 350, 50))
-            #     pygame.display.flip()
-            #     for i in lettres:
-            #         cc.append(i.nom)
-            #     print(cc)
-            #     for lettre in lettres :#affiche les lettres
-            #         lettre.afficher_lettre(fenetre)
-            #     break
-            # print(cc)
-            # Joueur_actuel = historique_joueur
-            # cases_plateaux = historique_cases
+            elif button_ramene_lettre.collidepoint(event.pos):
+                lettres, cases_existantes = ramener_lettre(historique_lettres,historique_cases)
             else:
                 for i in lettres:#on verifie si ca correspond a la position d'une lettre et on stocke la lettre correspondante
                     x, y = i.coord
@@ -649,7 +649,8 @@ while continuer:#boucle principale du jeu
     fenetre.blit(text_pass, text_rect_pass)
     pygame.draw.rect(fenetre,(128, 128, 128),button_suppr_letres)
     #fenetre.blit(image_poubelle, button_suppr_letres)
-    font_pts = pygame.font.SysFont('KAZYcase scrabble', 30)
+    pygame.draw.rect(fenetre,(255, 0, 0),button_ramene_lettre)
+    #fenetre.blit(image_fleche,button_ramene_lettre)
     y_points=20
     for i in Joueurs:
         points="Points "+i.nom+" : "+str(i.points)
@@ -657,12 +658,10 @@ while continuer:#boucle principale du jeu
         pygame.draw.rect(fenetre, (100,100,0), pygame.Rect(840, y_points, 200, 50))
         fenetre.blit(texte_points, texte_points.get_rect(center = pygame.Rect(860, y_points, 150, 50).center))
         y_points+=70
-
-
-
-
-    pygame.draw.rect(fenetre,(255, 0, 0),button_ramene_lettre)
-    #fenetre.blit(image_fleche,button_ramene_lettre)
+    pois="Points "+ str(score_du_mot)
+    texte_pots = font_pts.render(pois, True, (255,255,255))
+    pygame.draw.rect(fenetre, (100,100,0), pygame.Rect(840, 500, 200, 50))
+    fenetre.blit(texte_pots, texte_pots.get_rect(center = pygame.Rect(860, 500, 150, 50).center))
     for lettre in lettres :#affiche les lettres
         lettre.afficher_lettre(fenetre)
     if len(lettres)!=7:#si il a moins de 7 lettres les remets d'affilé pour éviter les trous dans le porte-lettres
@@ -686,4 +685,3 @@ while continuer:#boucle principale du jeu
         lettre_select.suivre_souris(fenetre)
     #print(compteur_lettre_poser_dans_tour)
     pygame.display.flip()
-
