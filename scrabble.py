@@ -117,9 +117,9 @@ def ajouter_aux_mots_invalide(mot):#ajoute le mot aux mots invalides
 #         ajouter_aux_mots_invalide(mot_a_verif)
 #         print("Le mot a été ajouté à la liste des mots refusés.")
 
-score_du_mot = 0	
-    # def verif_relachement_sur_lettre(self,x,y,u,mouse_x,mouse_y,lettre_select):
-    #     return (x <= mouse_x <= x + u) and (y <= mouse_y <= y + u) and ((mouse_x,mouse_y) != lettre_select.coord)
+score_du_mot = 0
+# def verif_relachement_sur_lettre(self,x,y,u,mouse_x,mouse_y,lettre_select):
+#     return (x <= mouse_x <= x + u) and (y <= mouse_y <= y + u) and ((mouse_x,mouse_y) != lettre_select.coord)
 historique_lettres = []
 historique_cases = []
 lettre_double_case = ["A4", "A12", "C7", "C9", "D1", "D8", "D15", "G3", "G7", "G9", "G13", "H4", "H12", "I3", "I7", "I9", "I13", "L1", "L8", "L15", "M7", "M9", "O4", "O12"]
@@ -563,6 +563,13 @@ def definir_couleur_bouton_passer_tour(autorisation_passer_tour):
         return (0, 255, 0)
     else:
         return (105,105,105)
+def verif_autorisation_valid_mot(compteur_lettre_poser_dans_tour,compteur_tour):
+    return (compteur_lettre_poser_dans_tour >= 2 and compteur_tour == 0) or (compteur_lettre_poser_dans_tour >=1 and not(compteur_tour==0))
+def definir_couleur_bouton_valider_mot(compteur_lettre_poser_tour,compteur_tour):
+    if verif_autorisation_valid_mot(compteur_lettre_poser_dans_tour,compteur_tour) :
+        return (0, 255, 0)
+    else:
+        return (105,105,105)
 
 
 pygame.init()
@@ -604,7 +611,7 @@ pygame.display.flip()
 
 #création de tout les boutons valide et de leurs texte associer
 font_boutton = pygame.font.Font(None, 24)
-button_tour_validé = pygame.Rect(625, 850, 150, 50)
+button_tour_validé = pygame.Rect(600, 850, 150, 50)
 text_valid = font_boutton.render("Valider votre mot", True, (255, 255, 255))
 text_rect = text_valid.get_rect(center = button_tour_validé.center)
 button_tour_passe = pygame.Rect(65, 850, 150, 50)
@@ -616,7 +623,7 @@ button_suppr_letres = pygame.Rect(0, 870, 50, 50)
 text_rect_supr = text_pass.get_rect(center = button_suppr_letres.center)
 
 #image_fleche = pygame.image.load('icons8-flèche-bas-50.png')
-button_ramene_lettre = pygame.Rect(775,850,50,50)
+button_ramene_lettre = pygame.Rect(775,870,50,50)
 text_rect_supr = text_pass.get_rect(center = button_ramene_lettre.center)
 
 
@@ -648,7 +655,7 @@ while continuer:#boucle principale du jeu
 
         elif event.type == pygame.MOUSEBUTTONDOWN:#quand l'utilisateur clique sur son clique gauche on récupere la position de la souris
             mouse_x, mouse_y = pygame.mouse.get_pos()
-            if button_tour_validé.collidepoint(event.pos):#vérifie si l'utilisateur clique sur le bouton tour validé
+            if button_tour_validé.collidepoint(event.pos) and verif_autorisation_valid_mot(compteur_lettre_poser_dans_tour,compteur_tour):#vérifie si l'utilisateur clique sur le bouton tour validé
                 if mot_valide_test():
                     Joueur_actuel.add_letters()
                     lettres,Joueur_actuel = changer_tour()
@@ -720,8 +727,8 @@ while continuer:#boucle principale du jeu
             lettre_select = None
 
     #dessine tous les boutons
-    pygame.draw.rect(fenetre, (0, 255, 0), button_tour_validé)
-    pygame.draw.rect(fenetre, definir_couleur_bouton_passer_tour(autorisation_passer_tour), button_tour_passe)  
+    pygame.draw.rect(fenetre, definir_couleur_bouton_valider_mot(compteur_lettre_poser_dans_tour,compteur_tour), button_tour_validé)
+    pygame.draw.rect(fenetre, definir_couleur_bouton_passer_tour(autorisation_passer_tour), button_tour_passe)
     fenetre.blit(text_valid, text_rect)
     fenetre.blit(text_pass, text_rect_pass)
     pygame.draw.rect(fenetre,(128, 128, 128),button_suppr_letres)
@@ -735,9 +742,9 @@ while continuer:#boucle principale du jeu
         pygame.draw.rect(fenetre, (100,100,0), pygame.Rect(840, y_points, 200, 50))
         fenetre.blit(texte_points, texte_points.get_rect(center = pygame.Rect(860, y_points, 150, 50).center))
         y_points+=70
-    
 
 
+    print(compteur_tour)
     pois=[]
     rurure = []
     for i in lettres:
@@ -769,7 +776,6 @@ while continuer:#boucle principale du jeu
         i.afficher_case(fenetre)
         ao.append(i.nom)
         #i.occupé = lettre_select
-    print(case_occupé_ce_tour)
 
     if not(lettre_select == None) :#si l'utilisateur selectionne une lettre on la fait suivre la souris
         lettre_select.suivre_souris(fenetre)
