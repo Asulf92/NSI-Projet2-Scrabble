@@ -14,7 +14,7 @@ class Joueur:#création d'une class Joueur contenant toutes les infos d'un joueu
 
     def add_points(self,nbr_points_a_add):#rajoute des points (ou en enleve) au joueur
         self.points += nbr_points_a_add
-    def remettre_en_orde(self,nouvel_ordre):#permet a l'utilisateur de remttre ces lettres dans l'orde qu'il veut
+    def remettre_en_orde(self,nouvel_ordre):#permet a l'utilisateur de remettre ses lettres dans l'orde qu'il veut
         self.letters = (list(nouvel_ordre))
         self.letters = []
         global lettres_possible
@@ -48,7 +48,7 @@ class Lettres_visuel:#définition d'une class lettres visuel étant a part de la
         position = pygame.mouse.get_pos()
         fenetre.blit(lettre, (position[0]-15,position[1]-15))
         return position
-#Création des les lettres possible avec le nombres de points correspondant
+#Création des lettres possible avec le nombres de points correspondant
 lettres_possible = []
 lettres_1_points = ["A","E","I","N","O","R","S","T","U","L"]
 lettres_2_points = ["D","G","M"]
@@ -87,7 +87,7 @@ class Sac: #création du sac contenant toutes les lettres et n'etant pas infini
 sac = Sac()
 
 def mot_valible_verif(mot):#vérifier la validité d'un mot
-    with open('mots_acceptes.csv', 'r', encoding='utf-8') as fichier:
+    with open('mots_acceptes', 'r', encoding='utf-8') as fichier:
 
         for ligne in fichier:
             if mot.upper() in ligne:
@@ -99,7 +99,7 @@ def ajouter_au_mot_valides(mot):#ajoute le mot aux mots valides
         csv_writer = csv.writer(fichier)
         csv_writer.writerow([mot.upper()])
 
-def ajouter_aux_mots_invalide(mot):#ajoute le mot aux mots invaldes
+def ajouter_aux_mots_invalide(mot):#ajoute le mot aux mots invalides
     with open('mots_refuses.csv', 'a', encoding='utf-8') as fichier:
         csv_writer = csv.writer(fichier)
         csv_writer.writerow([mot])
@@ -117,8 +117,7 @@ def ajouter_aux_mots_invalide(mot):#ajoute le mot aux mots invaldes
 #         ajouter_aux_mots_invalide(mot_a_verif)
 #         print("Le mot a été ajouté à la liste des mots refusés.")
 
-score_du_mot = 0
-
+score_du_mot = 0	
     # def verif_relachement_sur_lettre(self,x,y,u,mouse_x,mouse_y,lettre_select):
     #     return (x <= mouse_x <= x + u) and (y <= mouse_y <= y + u) and ((mouse_x,mouse_y) != lettre_select.coord)
 historique_lettres = []
@@ -128,8 +127,8 @@ lettre_triple_case = ["B6", "B10", "F2", "F6", "F10", "F14","J2","J6","J10","J14
 mot_double_case = ["B2", "C3", "D4", "E5", "H8", "E11", "D12", "C13", "B14", "N2", "M3", "L4", "K5", "K11", "L12", "M13", "N14"]
 mot_triple_case =["A1", "A8", "A15", "H1", "H15", "O1", "O8", "O15"]
 #définition de toute les case spéciale
-alphabet = ("Z","A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M")
-nombres = ("0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16")
+alphabet = ("Z","A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M","N","O","P") #Z et P n'existent pas mais leur présence dans la liste et nécessaire pour après
+nombres = ("0","1","2","3","4","5","6","7","8","9","10","11","12","13","14","15","16") #Meme chose pour 0 et 16
 case_occupé = []
 case_possible = [["H8"],[]]
 compteur_lettre_poser_dans_tour = 0
@@ -149,7 +148,7 @@ def case_adjacente_a_une_case(nom_case,alphabet,nombres):
     case_adjacentes_chiffre=[case_bas,case_haut]
     return case_adjacentes_lettre,case_adjacentes_chiffre
 
-class Case_visuel:#définition de la class case visuel permettant de gérer leur viseul
+class Case_visuel:#définition de la classe case visuel permettant de gérer leur visuel
 
     def __init__(self,nom,coord,hauteur,epaisseur):
 
@@ -216,6 +215,7 @@ class Case_visuel:#définition de la class case visuel permettant de gérer leur
                         return une_case_adj_dans_case_occupé([case_adjacentes_lettre,case_adjacentes_chiffre],case_occupé) and nom_case_dans_case_possible(nom_case_select,case_possible)
                     return False
 
+
                 if vérif_validité_case(self.nom,case_adjacentes_lettre ,case_adjacentes_chiffre ,case_occupé ,compteur_lettre_poser_dans_tour,case_possible,compteur_tour,case_poser_ce_tour):
                     index_case_occupé_ce_tour = cases_existantes.index(self)
                     case_occupé_ce_tour.append(index_case_occupé_ce_tour)
@@ -272,9 +272,9 @@ class Case_visuel:#définition de la class case visuel permettant de gérer leur
                             for u in case_adjacente_a_case_a_test :
                                 if u in case_occupé and (nom_case_a_test not in case_possible[0]):
                                     case_possible[0].append(nom_case_a_test)
-                    compteur_lettre_poser_dans_tour+=1
-                    nom_derniere_case_prise = [nom_case_lettre,nom_case_nombre]
-                    return True
+                        compteur_lettre_poser_dans_tour+=1
+                        nom_derniere_case_prise = [nom_case_lettre,nom_case_nombre]
+                        return True
                 return False
     def afficher_case(self,fenetre):#permet d'afficher la case et la lettre dans cette case s'il y en a une
         x,y = self.coord[0], self.coord[1]
@@ -378,8 +378,7 @@ def création_de_la_partie(fenetre):
         joueurs.append(Joueur(nomsjoueurs[i]))
     return joueurs
 def changer_tour():#permet de changer de joueur a chaque tour et donc de changer les lettres a afficher
-    global nbr_joueur , compteur_tour_Joueur,case_occupé,historique_cases_occupé , case_occupé_ce_tour
-
+    global nbr_joueur,historique_point_Joueur , compteur_tour_Joueur,case_occupé,historique_cases_occupé , case_occupé_ce_tour
     historique_cases_occupé = list(case_occupé)
     case_occupé_ce_tour = []
     if (compteur_tour_Joueur + 1) > nbr_joueur-1 :
@@ -387,13 +386,15 @@ def changer_tour():#permet de changer de joueur a chaque tour et donc de changer
     else:
         compteur_tour_Joueur += 1
     Joueur_actuel = Joueurs[compteur_tour_Joueur]
+    historique_point_Joueur=Joueur_actuel.points
     lettres = []
-    épaisseur_et_hauteur_lettres = 50
     for i in Joueur_actuel.letters:#création des objets lettres_visuel
+        épaisseur_et_hauteur_lettres = 50
         if i not in lettres:
             locals()[i.nom]=Lettres_visuel(i.nom,i.points)
             lettres.append(locals()[i.nom])
-            Joueur_actuel.letters.append(locals()[i.nom])
+    épaisseur_et_hauteur_lettres = 50
+    Joueur_actuel.letters.append(locals()[i.nom])
     for i in range(len(lettres)):#création des coordonées des lettres
         x = (i * épaisseur_et_hauteur_lettres) + 230
         y = 870
@@ -518,11 +519,10 @@ def mot_valide_test():
                         elif event.type == pygame.MOUSEBUTTONDOWN:#quand l'utilisateur clique sur son clique gauche on récupere la mosition de la souris
                             if carr_oui.collidepoint(event.pos):
                                 continuer = False
-                                nbr_joueur = 2
                                 return True
                             if carr_non.collidepoint(event.pos):
                                 continuer = False
-                                nbr_joueur = 3
+                                ramener_lettre()
                                 return False
 
                     pygame.draw.rect(fenetre, (0, 255, 0), grand_carré)
@@ -535,14 +535,35 @@ def mot_valide_test():
 
     a = trouver_mot_ecris()
     return vérif_validité_des_mots(a)
-def ramener_lettre(lettres_début_tour,cases_debut_tour):
-
-    return lettres_début_tour,cases_debut_tour
+def ramener_lettre():
+    global lettres,historique_point_Joueur,Joueur_actuel,case_occupé,case_occupé_ce_tour,historique_lettres,compteur_lettre_poser_dans_tour,autorisation_passer_tour,autorisation_poser_lettre,autorisation_suppr_lettre
+    Joueur_actuel.points=historique_point_Joueur
+    for i in case_occupé_ce_tour:
+        cases_existantes[i].occupé = None
+    case_occupé_ce_tour = []
+    lettres = []
+    Joueur_actuel.letters = []
+    for i in historique_lettres:#création des objets lettres_visuel
+        if i not in lettres:
+            locals()[i.nom]=Lettres_visuel(i.nom,i.points)
+            lettres.append(locals()[i.nom])
+            Joueur_actuel.letters.append(locals()[i.nom])
+    épaisseur_et_hauteur_lettres = 50
+    for i in range(0,len(lettres)):#création des coordonée des lettres
+        x = (i * épaisseur_et_hauteur_lettres) + 230
+        y = 870
+        lettres[i].coord = (x,y)
+    case_occupé = historique_cases_occupé
+    compteur_lettre_poser_dans_tour = 0
+    autorisation_poser_lettre = True
+    autorisation_suppr_lettre = True
+    autorisation_passer_tour = False
 def definir_couleur_bouton_passer_tour(autorisation_passer_tour):
     if autorisation_passer_tour :
         return (0, 255, 0)
     else:
         return (105,105,105)
+
 
 pygame.init()
 taille_fenetere = (1040, 920)
@@ -550,17 +571,18 @@ fenetre = pygame.display.set_mode(taille_fenetere)
 fenetre.fill((128,128,0))#couleur du fond
 Joueurs = création_de_la_partie(fenetre)
 Joueur_actuel = Joueurs[0]
-
+historique_point_Joueur=Joueur_actuel.points
 nbr_joueur = len(Joueurs)
 for u in Joueurs:
     u.add_letters()
-lettres = []
+for i in Joueurs[0].letters:#création des objets lettres_visuel
+    lettres = []
 for i in Joueur_actuel.letters:#création des objets lettres_visuel
     if i not in lettres:
         locals()[i.nom]=Lettres_visuel(i.nom,i.points)
         lettres.append(locals()[i.nom])
 épaisseur_et_hauteur_lettres = 50
-for i in range(0,len(lettres)):#création des coordonée des lettres
+for i in range(len(lettres)):#création des coordonée des lettres
     x = (i * épaisseur_et_hauteur_lettres) + 230
     y = 870
     lettres[i].coord = (x,y)
@@ -598,8 +620,8 @@ button_ramene_lettre = pygame.Rect(775,850,50,50)
 text_rect_supr = text_pass.get_rect(center = button_ramene_lettre.center)
 
 
-#création des variables nécessaire pour la boucle principale
 
+#création des variables nécessaire pour la boucle principale
 lettre_select= None
 compteur_tour_une_action = None
 compteur_tour = 0
@@ -624,7 +646,7 @@ while continuer:#boucle principale du jeu
         if event.type == pygame.QUIT:#Pour quitter le jeu
             continuer = False
 
-        elif event.type == pygame.MOUSEBUTTONDOWN:#quand l'utilisateur clique sur son clique gauche on récupere la mosition de la souris
+        elif event.type == pygame.MOUSEBUTTONDOWN:#quand l'utilisateur clique sur son clique gauche on récupere la position de la souris
             mouse_x, mouse_y = pygame.mouse.get_pos()
             if button_tour_validé.collidepoint(event.pos):#vérifie si l'utilisateur clique sur le bouton tour validé
                 if mot_valide_test():
@@ -642,29 +664,10 @@ while continuer:#boucle principale du jeu
                 compteur_tour += 1
                 autorisation_poser_lettre,autorisation_suppr_lettre = True,True
                 compteur_lettre_poser_dans_tour = 0
-
             elif button_ramene_lettre.collidepoint(event.pos):
-                for i in case_occupé_ce_tour:
-                    cases_existantes[i].occupé = None
-                case_occupé_ce_tour = []
-                lettres = []
-                Joueur_actuel.letters = []
-                for i in historique_lettres:#création des objets lettres_visuel
-                    if i not in lettres:
-                        locals()[i.nom]=Lettres_visuel(i.nom,i.points)
-                        lettres.append(locals()[i.nom])
-                        Joueur_actuel.letters.append(locals()[i.nom])
-                épaisseur_et_hauteur_lettres = 50
-                for i in range(0,len(lettres)):#création des coordonée des lettres
-                    x = (i * épaisseur_et_hauteur_lettres) + 230
-                    y = 870
-                    lettres[i].coord = (x,y)
-                case_occupé = historique_cases_occupé
-                compteur_lettre_poser_dans_tour = 0
-                autorisation_poser_lettre = True
-                autorisation_suppr_lettre = True
+                ramener_lettre()
 
-                #lettres, cases_existantes = ramener_lettre(historique_lettres,historique_cases)
+
             else:
                 for i in lettres:#on verifie si ca correspond a la position d'une lettre et on stocke la lettre correspondante
                     x, y = i.coord
@@ -712,14 +715,13 @@ while continuer:#boucle principale du jeu
                                 Joueur_actuel.letters.remove(i)
                                 lettres.remove(lettres[compteur-1])
                                 autorisation_suppr_lettre = False
-
                                 break
                         break
             lettre_select = None
 
     #dessine tous les boutons
     pygame.draw.rect(fenetre, (0, 255, 0), button_tour_validé)
-    pygame.draw.rect(fenetre, definir_couleur_bouton_passer_tour(autorisation_passer_tour), button_tour_passe)
+    pygame.draw.rect(fenetre, definir_couleur_bouton_passer_tour(autorisation_passer_tour), button_tour_passe)  
     fenetre.blit(text_valid, text_rect)
     fenetre.blit(text_pass, text_rect_pass)
     pygame.draw.rect(fenetre,(128, 128, 128),button_suppr_letres)
@@ -733,6 +735,8 @@ while continuer:#boucle principale du jeu
         pygame.draw.rect(fenetre, (100,100,0), pygame.Rect(840, y_points, 200, 50))
         fenetre.blit(texte_points, texte_points.get_rect(center = pygame.Rect(860, y_points, 150, 50).center))
         y_points+=70
+    
+
 
     pois=[]
     rurure = []
@@ -744,6 +748,7 @@ while continuer:#boucle principale du jeu
         uer.append(i.nom)
     #print("lettres = ",pois,rurure)
     texte_pots = font_pts.render(str(uer), True, (255,255,255))
+
     pygame.draw.rect(fenetre, (100,100,0), pygame.Rect(840, 500, 200, 50))
     fenetre.blit(texte_pots, texte_pots.get_rect(center = pygame.Rect(860, 500, 150, 50).center))
     for lettre in lettres :#affiche les lettres
@@ -765,6 +770,7 @@ while continuer:#boucle principale du jeu
         ao.append(i.nom)
         #i.occupé = lettre_select
     print(case_occupé_ce_tour)
+
     if not(lettre_select == None) :#si l'utilisateur selectionne une lettre on la fait suivre la souris
         lettre_select.suivre_souris(fenetre)
     #print(compteur_lettre_poser_dans_tour)
