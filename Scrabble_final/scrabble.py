@@ -6,6 +6,7 @@ class Joueur:#création d'une class Joueur contenant toutes les infos d'un joueu
         self.letters = []
         self.nom = nom
         self.veut_finir_partie = False
+        self.tour_consec=0
     def add_letters(self):#permet de faire piocher des lettre au joueur
         while len(self.letters) < 7:
             self.letters.append(sac.piocher_une_lettre())
@@ -71,13 +72,20 @@ lettres_possible.append(Joker)
 
 class Sac: #création du sac contenant toutes les lettres et n'etant pas infini
     def __init__(self):#définition de toutes les lettres et de leur nombre présente au début du jeu
-        self.lettres_dans_le_sac ={Joker:2,A: 9, B: 2, C: 2, D: 4, E: 12, F: 2, G: 3, H: 2,I: 9, J: 1, K: 1, L: 4, M: 2, N: 6, O: 8, P: 2,Q: 1, R: 6, S: 4, T: 6, U: 4, V: 2, W: 2, X: 1,Y: 2, Z: 1}
+        self.lettres_dans_le_sac ={"pour condition":0,Joker:2,A: 9, B: 2, C: 2, D: 4, E: 12, F: 2, G: 3, H: 2,I: 9, J: 1, K: 1, L: 4, M: 2, N: 6, O: 8, P: 2,Q: 1, R: 6, S: 4, T: 6, U: 4, V: 2, W: 2, X: 1,Y: 2, Z: 1}
     def piocher_une_lettre(self):#permet de piocher une lettre aléatoire et du l'enlever du sac
         global joueurs
-        lettre_piocher = random.choice(list(self.lettres_dans_le_sac.keys()))
-        self.lettres_dans_le_sac[lettre_piocher] -= 1
-        return lettre_piocher
-
+        compteur_nombre_lettre_restante = 0
+        for i in self.lettres_dans_le_sac.items():
+            compteur_nombre_lettre_restante += 1
+        if compteur_nombre_lettre_restante !=0:
+            lettre_piocher = "pour condition"
+            while self.lettres_dans_le_sac[lettre_piocher] == 0:
+                lettre_piocher = random.choice(list(self.lettres_dans_le_sac.keys()))
+            self.lettres_dans_le_sac[lettre_piocher] -= 1
+            return lettre_piocher
+        else :
+            return None
 sac = Sac()
 
 def mot_valible_verif(mot):#vérifier la validité d'un mot
@@ -264,6 +272,7 @@ compteur_tour_Joueur = 0
 compteur_lettre_poser_total = 0
 
 def création_de_la_partie(fenetre):
+    pygame.display.set_caption("SCRABBLE")
     font = pygame.font.SysFont('KAZYcase scrabble', 25)
     text = font.render("Combien de joueurs etes vous?", True, (255, 255, 255))
     text_2_j = font.render("2", True, (255, 255, 255))
@@ -352,7 +361,9 @@ def création_de_la_partie(fenetre):
     return joueurs
 
 def changer_tour():#permet de changer de joueur a chaque tour et donc de changer les lettres a afficher
-    global nbr_joueur,historique_point_Joueur , compteur_tour_Joueur,case_occupé,historique_cases_occupé , case_occupé_ce_tour,historique_lettres
+    
+    global nbr_joueur,historique_point_Joueur ,compteur_tour,autorisation_passer_tour, compteur_tour_Joueur,case_occupé,historique_cases_occupé , case_occupé_ce_tour,historique_lettres
+    
     historique_cases_occupé = list(case_occupé)
     case_occupé_ce_tour = []
     if (compteur_tour_Joueur + 1) > nbr_joueur-1 :
@@ -362,7 +373,7 @@ def changer_tour():#permet de changer de joueur a chaque tour et donc de changer
     Joueur_actuel = Joueurs[compteur_tour_Joueur]
     historique_point_Joueur=Joueur_actuel.points
     lettres = []
-
+    autorisation_passer_tour=False
     for i in Joueur_actuel.letters:#création des objets lettres_visuel
         épaisseur_et_hauteur_lettres = 50
         if i not in lettres:
@@ -577,9 +588,9 @@ def afficher_tous_les_boutons(fenetre,button_tour_validé,button_tour_passe,butt
     text_rect_fin = text_fin.get_rect(center = button_fin_partie.center)
     text_pass = font_boutton.render("passer votre tour", True, (255, 255, 255))
     text_rect_pass = text_pass.get_rect(center = button_tour_passe.center)
-    #image_poubelle = pygame.image.load("icons8-poubelle-50.png")
+    image_poubelle = pygame.image.load("icons8-poubelle-50.png")
     text_rect_supr = text_pass.get_rect(center = button_suppr_letres.center)
-    #image_fleche = pygame.image.load('icons8-flèche-bas-50.png')
+    image_fleche = pygame.image.load('icons8-flèche-bas-50.png')
     text_rect_supr = text_pass.get_rect(center = button_ramene_lettre.center)
     pygame.draw.rect(fenetre, definir_couleur_bouton_valider_mot(compteur_lettre_poser_dans_tour,compteur_tour), button_tour_validé)
     pygame.draw.rect(fenetre, definir_couleur_bouton_passer_tour(autorisation_passer_tour), button_tour_passe)
@@ -588,9 +599,9 @@ def afficher_tous_les_boutons(fenetre,button_tour_validé,button_tour_passe,butt
     fenetre.blit(text_valid, text_rect)
     fenetre.blit(text_pass, text_rect_pass)
     pygame.draw.rect(fenetre,(128, 128, 128),button_suppr_letres)
-    #fenetre.blit(image_poubelle, button_suppr_letres)
+    fenetre.blit(image_poubelle, button_suppr_letres)
     pygame.draw.rect(fenetre,(255, 0, 0),button_ramene_lettre)
-    #fenetre.blit(image_fleche,button_ramene_lettre)
+    fenetre.blit(image_fleche,button_ramene_lettre)
 
 def afficher_vainqueur(joueurs):
     BLANC = (255, 255, 255)
@@ -637,12 +648,9 @@ def afficher_vainqueur(joueurs):
 
     pygame.quit()
 def verif_fin_de_partie():
-    compteur_fin_partie = 0
-    for i in Joueurs:
-        if i.veut_finir_partie :
-            compteur_fin_partie+= 1
-    if compteur_fin_partie == nbr_joueur:
+    if Joueur_actuel.tour_consec==3:
         afficher_vainqueur(Joueurs)
+    
 pygame.init()
 taille_fenetere = (1040, 920)
 fenetre = pygame.display.set_mode(taille_fenetere)
@@ -706,7 +714,6 @@ while continuer:#boucle principale du jeu
     for event in pygame.event.get():
         if event.type == pygame.QUIT:#Pour quitter le jeu
             continuer = False
-
         elif event.type == pygame.MOUSEBUTTONDOWN:#quand l'utilisateur clique sur son clique gauche on récupere la position de la souris
             mouse_x, mouse_y = pygame.mouse.get_pos()
             if button_mot_validé.collidepoint(event.pos) and verif_autorisation_valid_mot(compteur_lettre_poser_dans_tour, compteur_tour):#vérifie si l'utilisateur clique sur le bouton tour validé
@@ -722,6 +729,7 @@ while continuer:#boucle principale du jeu
 
             elif button_tour_passe.collidepoint(event.pos) and autorisation_passer_tour:#vérifie si l'utilisateur clique sur le bouton passer le tour
                 Joueur_actuel.add_letters()
+                Joueur_actuel.tour_consec+=1
                 lettres,Joueur_actuel = changer_tour()
                 cacher_ecran_changement_tour(fenetre)
                 compteur_tour += 1
@@ -743,9 +751,7 @@ while continuer:#boucle principale du jeu
             mouse_x, mouse_y = pygame.mouse.get_pos()
 
             if button_suppr_letres.collidepoint(event.pos) and autorisation_suppr_lettre :#si l'utilisateur relache la lettre sur la poubelle on supprime la lettre de la variable lettre et des lettres du joueur
-                if lettre_select == None:#éviter certains bugs
-                    break
-                else :
+                if compteur_tour!=0 :
                     autorisation_poser_lettre = False
                     autorisation_passer_tour = True
                     compteur_a = 0
