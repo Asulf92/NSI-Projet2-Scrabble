@@ -613,7 +613,7 @@ def afficher_tous_les_boutons(fenetre,button_tour_validé,button_tour_passe,butt
 def afficher_vainqueur(joueurs):
     BLANC = (255, 255, 255)
     NOIR = (0, 0, 0)
-    taille_fenetre = (800, 600)
+    taille_fenetre = (1040, 920)
     fenetre = pygame.display.set_mode(taille_fenetre)
     pygame.display.set_caption("Affichage du vainqueur")
 
