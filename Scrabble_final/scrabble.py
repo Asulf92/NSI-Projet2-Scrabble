@@ -74,18 +74,25 @@ class Sac: #création du sac contenant toutes les lettres et n'etant pas infini
     def __init__(self):#définition de toutes les lettres et de leur nombre présente au début du jeu
         self.lettres_dans_le_sac ={"pour condition":0,Joker:2,A: 9, B: 2, C: 2, D: 4, E: 12, F: 2, G: 3, H: 2,I: 9, J: 1, K: 1, L: 4, M: 2, N: 6, O: 8, P: 2,Q: 1, R: 6, S: 4, T: 6, U: 4, V: 2, W: 2, X: 1,Y: 2, Z: 1}
     def piocher_une_lettre(self):#permet de piocher une lettre aléatoire et du l'enlever du sac
-        global joueurs
+        global Joueurs
         compteur_nombre_lettre_restante = 0
-        for i in self.lettres_dans_le_sac.items():
-            compteur_nombre_lettre_restante += 1
+        for i in self.lettres_dans_le_sac.values():
+            compteur_nombre_lettre_restante += i
+        print(compteur_nombre_lettre_restante)
         if compteur_nombre_lettre_restante !=0:
             lettre_piocher = "pour condition"
-            while self.lettres_dans_le_sac[lettre_piocher] == 0:
-                lettre_piocher = random.choice(list(self.lettres_dans_le_sac.keys()))
+            lettre_a_piocher = []
+            for i,u in self.lettres_dans_le_sac.items():
+                if u != 0:
+                    lettre_a_piocher.append(i)
+                # elif lettre_a_piocher == []:
+                #     afficher_vainqueur(joueurs)
+            print(lettre_a_piocher)
+            lettre_piocher = random.choice(lettre_a_piocher)
             self.lettres_dans_le_sac[lettre_piocher] -= 1
             return lettre_piocher
         else :
-            return None
+            afficher_vainqueur(Joueurs)
 sac = Sac()
 
 def mot_valible_verif(mot):#vérifier la validité d'un mot
