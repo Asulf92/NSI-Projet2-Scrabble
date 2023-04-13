@@ -436,26 +436,29 @@ def mot_valide_test():
                 multiplicateur_du_mot *= case_actuellement_test.multiplicateur_mot
                 print(score_du_mot)
                 index_case_actuellement_test = cases_existantes.index(case_actuellement_test)
-                case_actuellement_test = cases_existantes[index_case_actuellement_test+avance]
-                if case_actuellement_test.tour_occupé == compteur_tour and continuee:
-                    mots_intermédiaire = []
-                    if avance == 1:
-                        avance_2 = 15
-                    elif avance == 15:
-                        avance_2 = 1
+                if index_case_actuellement_test+avance<=225:
+                    case_actuellement_test = cases_existantes[index_case_actuellement_test+avance]
+                    if case_actuellement_test.tour_occupé == compteur_tour and continuee:
+                        mots_intermédiaire = []
+                        if avance == 1:
+                            avance_2 = 15
+                        elif avance == 15:
+                            avance_2 = 1
 
-                    if index_case_actuellement_test_b == None:
-                        case_actuellement_test_b = cases_existantes[index_case_actuellement_test+avance]
-                    else :
-                        case_actuellement_test_b = cases_existantes[index_case_actuellement_test_b+avance]
-                    case_actuellement_test_a = remonter_premier_lettre(avance_2,case_actuellement_test_b)
-                    mots_intermédiaire += interpreter_le_mot(avance_2,case_actuellement_test_a,compteur_tour,False)
-                    for p in mots_intermédiaire:
-                        if p == []:
-                            mots_intermédiaire.remove(p)
-                    index_case_actuellement_test_b = cases_existantes.index(case_actuellement_test_b)
-                    if not(mots_intermédiaire==[]):
-                        mots_comp += mots_intermédiaire
+                        if index_case_actuellement_test_b == None:
+                            case_actuellement_test_b = cases_existantes[index_case_actuellement_test+avance]
+                        else :
+                            case_actuellement_test_b = cases_existantes[index_case_actuellement_test_b+avance]
+                        case_actuellement_test_a = remonter_premier_lettre(avance_2,case_actuellement_test_b)
+                        mots_intermédiaire += interpreter_le_mot(avance_2,case_actuellement_test_a,compteur_tour,False)
+                        for p in mots_intermédiaire:
+                            if p == []:
+                                mots_intermédiaire.remove(p)
+                        index_case_actuellement_test_b = cases_existantes.index(case_actuellement_test_b)
+                        if not(mots_intermédiaire==[]):
+                            mots_comp += mots_intermédiaire
+                    else : 
+                        break
             if len(mot_composé_actuellement) > 1:
                 Joueur_actuel.points += score_du_mot*multiplicateur_du_mot
                 mot_composé_actuellement = [mot_composé_actuellement]
