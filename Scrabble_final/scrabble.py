@@ -78,7 +78,7 @@ class Sac: #création du sac contenant toutes les lettres et n'etant pas infini
         compteur_nombre_lettre_restante = 0
         for i in self.lettres_dans_le_sac.values():
             compteur_nombre_lettre_restante += i
-        print(compteur_nombre_lettre_restante)
+
         if compteur_nombre_lettre_restante !=0:
             lettre_piocher = "pour condition"
             lettre_a_piocher = []
@@ -87,7 +87,7 @@ class Sac: #création du sac contenant toutes les lettres et n'etant pas infini
                     lettre_a_piocher.append(i)
                 # elif lettre_a_piocher == []:
                 #     afficher_vainqueur(joueurs)
-            print(lettre_a_piocher)
+
             lettre_piocher = random.choice(lettre_a_piocher)
             self.lettres_dans_le_sac[lettre_piocher] -= 1
             return lettre_piocher
@@ -97,19 +97,19 @@ sac = Sac()
 
 def mot_valible_verif(mot):#vérifier la validité d'un mot
     with open('mots_acceptes.csv', 'r', encoding='utf-8') as fichier:
-
         for ligne in fichier:
             if mot.upper() in ligne:
                 return True
     return False
 
 def ajouter_au_mot_valides(mot):#ajoute le mot aux mots valides
+    print(mot)
     with open('mots_acceptes.csv', 'a', encoding='utf-8') as fichier:
         csv_writer = csv.writer(fichier)
         csv_writer.writerow([mot.upper()])
 
 def ajouter_aux_mots_invalide(mot):#ajoute le mot aux mots invalides
-    with open('mots_refuses.csv', 'a', encoding='utf-8') as fichier:
+    with open('mots_refuses.csv', 'w', encoding='utf-8') as fichier:
         csv_writer = csv.writer(fichier)
         csv_writer.writerow([mot])
 
@@ -368,9 +368,9 @@ def création_de_la_partie(fenetre):
     return joueurs
 
 def changer_tour():#permet de changer de joueur a chaque tour et donc de changer les lettres a afficher
-    
+
     global nbr_joueur,historique_point_Joueur ,compteur_tour,autorisation_passer_tour, compteur_tour_Joueur,case_occupé,historique_cases_occupé , case_occupé_ce_tour,historique_lettres
-    
+
     historique_cases_occupé = list(case_occupé)
     case_occupé_ce_tour = []
     if (compteur_tour_Joueur + 1) > nbr_joueur-1 :
@@ -434,7 +434,7 @@ def mot_valide_test():
                 mot_composé_actuellement.append(case_actuellement_test.occupé.nom)
                 score_du_mot += case_actuellement_test.occupé.points * case_actuellement_test.multiplicateur_lettre
                 multiplicateur_du_mot *= case_actuellement_test.multiplicateur_mot
-                print(score_du_mot)
+
                 index_case_actuellement_test = cases_existantes.index(case_actuellement_test)
                 if index_case_actuellement_test+avance<=225:
                     case_actuellement_test = cases_existantes[index_case_actuellement_test+avance]
@@ -457,8 +457,8 @@ def mot_valide_test():
                         index_case_actuellement_test_b = cases_existantes.index(case_actuellement_test_b)
                         if not(mots_intermédiaire==[]):
                             mots_comp += mots_intermédiaire
-                    else : 
-                        break
+                else :
+                    break
             if len(mot_composé_actuellement) > 1:
                 Joueur_actuel.points += score_du_mot*multiplicateur_du_mot
                 mot_composé_actuellement = [mot_composé_actuellement]
@@ -491,8 +491,11 @@ def mot_valide_test():
         return mots_trouver
 
     def vérif_validité_des_mots(lst_mots):
-        for i in lst_mots:
-            mot_test_actuel = str(i)
+        print(lst_mots)
+        for mot in lst_mots:
+            mot_test_actuel = ""
+            for lettre in mot:
+                mot_test_actuel += lettre
             if mot_valible_verif(mot_test_actuel):
                 return True
             else :
@@ -519,10 +522,10 @@ def mot_valide_test():
                             continuer = False
                         elif event.type == pygame.MOUSEBUTTONDOWN:#quand l'utilisateur clique sur son clique gauche on récupere la mosition de la souris
                             if carr_oui.collidepoint(event.pos):
-                                continuer = False
+                                ajouter_au_mot_valides(mot_test_actuel)
                                 return True
                             if carr_non.collidepoint(event.pos):
-                                continuer = False
+                                ajouter_aux_mots_invalide(mot_test_actuel)
                                 ramener_lettre()
                                 return False
 
@@ -660,7 +663,7 @@ def afficher_vainqueur(joueurs):
 def verif_fin_de_partie():
     if Joueur_actuel.tour_consec==3:
         afficher_vainqueur(Joueurs)
-    
+
 pygame.init()
 taille_fenetere = (1040, 920)
 fenetre = pygame.display.set_mode(taille_fenetere)
