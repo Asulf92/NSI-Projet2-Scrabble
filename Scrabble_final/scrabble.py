@@ -823,6 +823,7 @@ while continuer:#boucle principale du jeu
 
     afficher_les_boutons(fenetre, button_mot_validé, button_tour_passe, button_suppr_letres, button_ramene_lettre,button_fin_partie)
     afficher_points_joueurs(fenetre)
+    afficher_aide(fenetre)
     verif_fin_de_partie()
     
     for lettre in lettres :
