@@ -5,7 +5,6 @@ class Joueur:#création d'une class Joueur contenant toutes les infos d'un joueu
         self.points = 0
         self.letters = []
         self.nom = nom
-        self.veut_finir_partie = False
         self.tour_consec=0
     def add_letters(self):#permet de faire piocher des lettre au joueur
         while len(self.letters) < 7:
@@ -767,8 +766,6 @@ while continuer:#boucle principale du jeu
                 compteur_lettre_poser_dans_tour = 0
             elif button_ramene_lettre.collidepoint(event.pos):
                 retour_debut_du_tour()
-            elif button_fin_partie.collidepoint(event.pos):
-                Joueur_actuel.veut_finir_partie = not(Joueur_actuel.veut_finir_partie)
             else:
                 for i in lettres:#on verifie si ca correspond a la position d'une lettre et on stocke la lettre correspondante
                     x, y = i.coord
