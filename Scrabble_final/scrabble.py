@@ -518,17 +518,17 @@ def test_mot_valide():
                     return False
             if mot_valible_verif(mot_test_actuel):
                 return True
-            else :
+            else :                
                 font = pygame.font.SysFont('KAZYcase scrabble', 25)
                 text = font.render("Voulez vous ajouter ce mot au dictionnaire", True, (255, 255, 255))
                 text_oui = font.render("oui", True, (255, 255, 255))
                 text_non = font.render("non", True, (255, 255, 255))
 
-                grand_carré = pygame.Rect(270, 310, 300, 150)
-                carr_oui = pygame.Rect(310, 425, 60, 35)
-                carr_non = pygame.Rect(385, 425, 60, 35)
+                grand_carré = pygame.Rect(400, 310, 300, 150)
+                carr_oui = pygame.Rect(465, 425, 60, 35)
+                carr_non = pygame.Rect(585, 425, 60, 35)
 
-                pygame.draw.rect(fenetre, (0, 255, 0), grand_carré)
+                pygame.draw.rect(fenetre, couleur_fond, grand_carré)
                 fenetre.blit(text, text.get_rect(center = grand_carré.center))
                 pygame.draw.rect(fenetre, (0, 0, 0), carr_oui)
                 fenetre.blit(text_oui, text_oui.get_rect(center = carr_oui.center))
@@ -549,9 +549,9 @@ def test_mot_valide():
                                 retour_debut_du_tour()
                                 return False
 
-                    pygame.draw.rect(fenetre, (0, 255, 0), grand_carré)
+                    pygame.draw.rect(fenetre, couleur_fond, grand_carré)
                     fenetre.blit(text, text.get_rect(center = grand_carré.center))
-                    pygame.draw.rect(fenetre, (0, 0, 0), carr_non)
+                    pygame.draw.rect(fenetre, (0,0,0), carr_oui)
                     fenetre.blit(text_oui, text_oui.get_rect(center = carr_oui.center))
                     pygame.draw.rect(fenetre, (0, 0, 0), carr_non)
                     fenetre.blit(text_non, text_non.get_rect(center = carr_non.center))
