@@ -102,6 +102,25 @@ def mot_valible_verif(mot):#vérifier la validité d'un mot
                 return True
     return False
 
+def afficher_aide(fenetre): #affichage des aides pour correspondance multiplicateurs<=>couleurs
+    font_aide=pygame.font.SysFont('KAZYcase scrabble', 25)
+
+    texteldb = font_aide.render("Lettre compte double", True, (0,0,0))
+    pygame.draw.rect(fenetre, (135,206,235), pygame.Rect(840, 390, 200, 50))
+    fenetre.blit(texteldb, texteldb.get_rect(center = pygame.Rect(860, 390, 150, 50).center))
+
+    textelct = font_aide.render("Lettre compte triple", True, (250,250,250))
+    pygame.draw.rect(fenetre, (0,0,139), pygame.Rect(840, 450, 200, 50))
+    fenetre.blit(textelct, textelct.get_rect(center = pygame.Rect(860, 450, 150, 50).center))
+
+    textemcd = font_aide.render("Mot compte double", True, (0,0,0))
+    pygame.draw.rect(fenetre, (255, 192, 203), pygame.Rect(840, 510, 200, 50))
+    fenetre.blit(textemcd, textelct.get_rect(center = pygame.Rect(860, 510, 150, 50).center))
+
+    textemct = font_aide.render("Mot compte triple", True, (0,0,0))
+    pygame.draw.rect(fenetre, (255, 0, 0), pygame.Rect(840, 570, 200, 50))
+    fenetre.blit(textemct, textelct.get_rect(center = pygame.Rect(860, 570, 150, 50).center))
+
 def ajouter_au_mot_valides(mot):#ajoute le mot aux mots valides
     print(mot)
     with open('mots_acceptes.csv', 'a', encoding='utf-8') as fichier:
