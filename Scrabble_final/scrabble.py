@@ -39,7 +39,6 @@ class Lettres:#définition d'une class lettres visuel étant a part de la classe
         position = pygame.mouse.get_pos()
         fenetre.blit(lettre, (position[0]-15,position[1]-15))
         return position
-
 #Création des lettres possible avec le nombres de points correspondant
 lettres_possible = []
 lettres_1_points = ["A","E","I","N","O","R","S","T","U","L"]
@@ -93,10 +92,18 @@ class Sac: #création du sac contenant toutes les lettres et n'etant pas infini
         else :
             afficher_vainqueur(Joueurs)
 sac = Sac()
-
+alphabett = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
 def mot_valible_verif(mot):#vérifier la validité d'un mot
     with open('mots_acceptes.csv', 'r', encoding='utf-8') as fichier:
         for ligne in fichier:
+            print(ligne,type(ligne))
+            for i in mot :
+                if i =="_":
+                    for j in alphabett:
+                        mot_test = mot.replace("_",j)
+                        print(mot_test)   
+                        if mot_test.upper() in ligne:
+                            return True
             if mot.upper() in ligne:
                 return True
     return False
@@ -124,7 +131,7 @@ def ajouter_au_mot_valides(mot):#ajoute le mot aux mots valides
     print(mot)
     with open('mots_acceptes.csv', 'a', encoding='utf-8') as fichier:
         csv_writer = csv.writer(fichier)
-        csv_writer.writerow([mot.upper()])
+        csv_writer.writerow([mot.upper()+",,,,,"])
 
 def ajouter_aux_mots_invalide(mot):#ajoute le mot aux mots invalides
     with open('mots_refuses.csv', 'w', encoding='utf-8') as fichier:
@@ -509,6 +516,7 @@ def test_mot_valide():
 
     def vérif_validité_des_mots(lst_mots):
         print(lst_mots)
+        compteur_mot_valide = 0
         for mot in lst_mots:
             mot_test_actuel = ""
             for lettre in mot:
@@ -520,7 +528,7 @@ def test_mot_valide():
                 return True
             else :                
                 font = pygame.font.SysFont('KAZYcase scrabble', 25)
-                text = font.render("Voulez vous ajouter ce mot au dictionnaire", True, (255, 255, 255))
+                text = font.render("Voulez vous ajouter ce mot au dictionnaire : "+mot_test_actuel, True, (255, 255, 255))
                 text_oui = font.render("oui", True, (255, 255, 255))
                 text_non = font.render("non", True, (255, 255, 255))
 
@@ -543,7 +551,9 @@ def test_mot_valide():
                         elif event.type == pygame.MOUSEBUTTONDOWN:#quand l'utilisateur clique sur son clique gauche on récupere la mosition de la souris
                             if carr_oui.collidepoint(event.pos):
                                 ajouter_au_mot_valides(mot_test_actuel)
-                                return True
+                                if compteur_mot_valide == len(lst_mots):
+                                    return True
+                                continuer = False
                             if carr_non.collidepoint(event.pos):
                                 ajouter_aux_mots_invalide(mot_test_actuel)
                                 retour_debut_du_tour()
