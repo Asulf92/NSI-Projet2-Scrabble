@@ -26,7 +26,7 @@ class Lettres:#définition d'une class lettres visuel étant a part de la classe
     def afficher_lettre(self,fenetre):#permet d'afficher la lettre a ses coordonée avec ses points
         x,y = self.coord
         u = 50
-        pygame.draw.rect(fenetre, (255,255,255), (x, y, u, u))
+        pygame.draw.rect(fenetre, (255,255,255), (x, y, u, u),border_radius=1)
         font = pygame.font.SysFont('KAZYcase scrabble', 50)
         font_chiffre = pygame.font.SysFont('KAZYcase scrabble', 25)
         lettre = font.render(self.nom, True, (0,0,0))
@@ -93,7 +93,7 @@ class Sac: #création du sac contenant toutes les lettres et n'etant pas infini
         else :
             afficher_vainqueur(Joueurs)
 sac = Sac()
-alphabett = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+
 def mot_valible_verif(mot):#vérifier la validité d'un mot
     with open('mots_acceptes.csv', 'r', encoding='utf-8') as fichier:
         for ligne in fichier:
@@ -266,7 +266,7 @@ class Case:#définition de la classe case visuel permettant de gérer leur visue
     def afficher_case(self,fenetre):#permet d'afficher la case et la lettre dans cette case s'il y en a une
         x,y = self.coord[0], self.coord[1]
         u = 53
-        pygame.draw.rect(fenetre, self.couleur, (x, y, u, u))
+        pygame.draw.rect(fenetre, self.couleur, (x, y, u, u),border_radius=2)
         if not(self.occupé == None):#vérifier si la case contient une lettre afin de l'afficher
             font_chiffre = pygame.font.SysFont('KAZYcase scrabble', 25)
             lettre = font.render(self.occupé.nom, True, (0,0,0))
@@ -280,18 +280,57 @@ def création_de_la_partie(fenetre):
     pygame.display.set_caption("SCRABBLE")
     font = pygame.font.SysFont('KAZYcase scrabble', 25)
     font2=pygame.font.SysFont('KAZYcase scrabble', 29)
-    text = font2.render("Combien de joueurs êtes vous?", True, (255, 255, 255))
-    text_2_j = font.render("2", True, (255, 255, 255))
-    text_3_j = font.render("3", True, (255, 255, 255))
-    text_4_j = font.render("4", True, (255, 255, 255))
+    font3=pygame.font.SysFont('KAZYcase scrabble', 45)
+    font4=pygame.font.SysFont('KAZYcase scrabble', 100)
 
-    grand_carré = pygame.Rect((taille_x/2)-184,(taille_y/2)-140, 300, 150)
-    carre_2_j = pygame.Rect((taille_x/2)-140,(taille_y/2)-40, 60, 35)
-    carre_3_j = pygame.Rect((taille_x/2)-70,(taille_y/2)-40, 60, 35)
-    carre_4_j = pygame.Rect((taille_x/2)+0,(taille_y/2)-40, 60, 35)
+
+
+
+    carre_2_j = pygame.Rect((taille_x/2)-147,(taille_y/2)-105, 60, 35)
+    carre_3_j = pygame.Rect((taille_x/2)-70,(taille_y/2)-105, 60, 35)
+    carre_4_j = pygame.Rect((taille_x/2)+5,(taille_y/2)-105, 60, 35)
 
     continuer = True
-    while continuer:
+    while continuer: #Affichages des règles / choses à savoir
+        fenetre.fill(couleur_fond)
+
+        for event in pygame.event.get():
+            if event.type==pygame.QUIT:
+                continuer=False
+            if event.type==pygame.KEYDOWN:
+                if event.key==pygame.K_RETURN or event.key==pygame.K_KP_ENTER:
+                    continuer=False
+
+        règles=font4.render("Règles :", True, (255, 255, 255))
+        fenetre.blit(règles,(taille_x/2- 170,25))
+
+        règle11=font3.render("-Pour passer son tour il faut d'abord avoir", True, (255, 255, 255))
+        règle12=font3.render(" défaussé une carte dans la poubelle:", True, (255, 255, 255))
+        image_poubelle = pygame.transform.scale(pygame.image.load("poubelle.png"),(67,65))
+        fenetre.blit(règle11,(30,150))
+        fenetre.blit(règle12,(30,185))
+        fenetre.blit(image_poubelle,(635,150))
+
+        règle21=font3.render("-Pour ramener les lettres de la poubelle", True, (255, 255, 255))
+        règle22=font3.render(" ou du plateau vers votre main :", True, (255, 255, 255))
+        image_fleche = pygame.transform.scale(pygame.image.load('icons8-flèche-bas-50.png'),(70,68))
+        rouge = pygame.Rect(625,267,67,70)
+        pygame.draw.rect(fenetre,(180,0,0),rouge,border_radius=10)
+        fenetre.blit(règle21,(30,270))
+        fenetre.blit(règle22,(30,305))
+        fenetre.blit(image_fleche,image_fleche.get_rect(center = rouge.center))
+
+
+
+        valider=font3.render("Pour continuer appuyer sur 'entrée'",True, (255, 255, 255))
+        valide = pygame.Rect(235,820,550,50)
+        pygame.draw.rect(fenetre,(0,130,0),valide,border_radius=14)
+        fenetre.blit(valider,valider.get_rect(center = valide.center))
+        
+        pygame.display.flip()
+
+    continuer = True
+    while continuer: #Choix du nombre de joueur
         fenetre.fill(couleur_fond)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:#Pour quitter le jeu
@@ -307,29 +346,32 @@ def création_de_la_partie(fenetre):
                     continuer = False
                     nbr_joueur = 4
 
-        pygame.draw.rect(fenetre, couleur_fond, grand_carré)
-        fenetre.blit(text, text.get_rect(center = grand_carré.center))
-        pygame.draw.rect(fenetre, (0, 0, 0), carre_2_j,border_radius=6)
+        text = font3.render("Combien de joueurs êtes vous?", True, (255, 255, 255))
+        text_2_j = font.render("2", True, (255, 255, 255))
+        text_3_j = font.render("3", True, (255, 255, 255))
+        text_4_j = font.render("4", True, (255, 255, 255))
+        fenetre.blit(text, (255,420))
+        pygame.draw.rect(fenetre, (0, 0, 0), carre_2_j,border_radius=8)
         fenetre.blit(text_2_j, text_2_j.get_rect(center = carre_2_j.center))
-        pygame.draw.rect(fenetre, (0, 0, 0), carre_3_j,border_radius=6)
+        pygame.draw.rect(fenetre, (0, 0, 0), carre_3_j,border_radius=8)
         fenetre.blit(text_3_j, text_3_j.get_rect(center = carre_3_j.center))
-        pygame.draw.rect(fenetre, (0, 0, 0), carre_4_j,border_radius=6)
+        pygame.draw.rect(fenetre, (0, 0, 0), carre_4_j,border_radius=8)
         fenetre.blit(text_4_j, text_4_j.get_rect(center = carre_4_j.center))
 
         pygame.display.flip()
 
-    nom_carré=pygame.Rect(320, 350, 400, 30)
+    nom_carré=pygame.Rect(316, 355, 400, 30)
     nomjoueur=''
     continuer=True
     joueurs=[]
     nomsjoueurs=[]
     r=0
-    while continuer and r!=nbr_joueur:
+    while continuer and r!=nbr_joueur: #Choix des pseudos des joueurs
         fenetre.fill(couleur_fond)
-        text=font2.render("Entrez le nom des joueurs dans l'ordre de jeu et 8 caractères maximum",True,(255,255,255))
-        grand_carré=pygame.Rect(370,350,300,150) #(340,350,300,150)
-        pygame.draw.rect(fenetre,couleur_fond,grand_carré)
-        fenetre.blit(text, text.get_rect(center=grand_carré.center))
+        text=font3.render("Entrez le nom des joueurs dans l'ordre",True,(255,255,255))
+        text2=font3.render("  des tours (8 caractères maximum) ",True,(255,255,255))
+        fenetre.blit(text,(235,400))
+        fenetre.blit(text2,(247,440))
         for i in range (0,nbr_joueur):
             for event in pygame.event.get():
                 if event.type==pygame.QUIT:
@@ -350,7 +392,7 @@ def création_de_la_partie(fenetre):
             text_affiché=font.render(nomjoueur+"| Invalide (trop long) ",True,(255,130,130))
         else:
             text_affiché=font.render(nomjoueur+"|",True,(255,255,255))
-        fenetre.blit(text_affiché,(326,356))
+        fenetre.blit(text_affiché,(322,361))
         pygame.draw.rect(fenetre,(255,255,255),nom_carré,3)
         pygame.display.flip()
     for i in range (0,nbr_joueur):
@@ -379,8 +421,8 @@ def changer_tour():#permet de changer de joueur a chaque tour et donc de changer
     épaisseur_et_hauteur_lettres = 50
     Joueur_actuel.letters.append(locals()[i.nom])
     for i in range(len(lettres)):#création des coordonées des lettres
-        x = (i * épaisseur_et_hauteur_lettres) + 230
-        y = 870
+        x = (i * épaisseur_et_hauteur_lettres) + 285
+        y = 855
         lettres[i].coord = (x,y)
     historique_lettres = list(lettres)
     return lettres,Joueur_actuel
@@ -548,8 +590,8 @@ def retour_debut_du_tour():
             Joueur_actuel.letters.append(locals()[i.nom])
     épaisseur_et_hauteur_lettres = 50
     for i in range(0,len(lettres)):#création des coordonée des lettres
-        x = (i * épaisseur_et_hauteur_lettres) + 230
-        y = 870
+        x = (i * épaisseur_et_hauteur_lettres) + 285
+        y = 855
         lettres[i].coord = (x,y)
     case_occupé = historique_cases_occupé
     compteur_lettre_poser_dans_tour = 0
@@ -609,21 +651,20 @@ def afficher_aide(fenetre): #affichage des aides pour correspondance multiplicat
     fenetre.blit(textemct, textelct.get_rect(center = pygame.Rect(860, 680, 170, 50).center))
 
 def afficher_les_boutons(fenetre,button_tour_validé,button_tour_passe,button_suppr_letres,button_ramene_lettre,button_fin_partie):
-    font_boutton = pygame.font.Font(None, 24)
-    text_valid = font_boutton.render("Valider votre mot", True, (255, 255, 255))
+    font_boutton = pygame.font.Font(None, 45)
+    text_valid = font_boutton.render("Valider", True, (255, 255, 255))
     text_rect = text_valid.get_rect(center = button_tour_validé.center)
-    font_boutton = pygame.font.Font(None, 24)
-    text_pass = font_boutton.render("passer votre tour", True, (255, 255, 255))
+    text_pass = font_boutton.render("Passer", True, (255, 255, 255))
     text_rect_pass = text_pass.get_rect(center = button_tour_passe.center)
-    image_poubelle = pygame.image.load("icons8-poubelle-50.png")
+    image_poubelle = pygame.transform.scale(pygame.image.load("poubelle.png"),(67,65))
     text_rect_supr = text_pass.get_rect(center = button_suppr_letres.center)
-    image_fleche = pygame.image.load('icons8-flèche-bas-50.png')
+    image_fleche = pygame.transform.scale(pygame.image.load('icons8-flèche-bas-50.png'),(70,68))
     text_rect_supr = text_pass.get_rect(center = button_ramene_lettre.center)
     pygame.draw.rect(fenetre, definir_couleur_bouton_valider_mot(compteur_lettre_poser_dans_tour,compteur_tour), button_tour_validé,border_radius=8)
     pygame.draw.rect(fenetre, definir_couleur_bouton_passer_tour(autorisation_passer_tour), button_tour_passe,border_radius=8)
     fenetre.blit(text_valid, text_rect)
     fenetre.blit(text_pass, text_rect_pass)
-    pygame.draw.rect(fenetre,(128, 128, 128),button_suppr_letres,border_radius=8)
+    pygame.draw.rect(fenetre,(90, 90, 90),button_suppr_letres,border_radius=8)
     fenetre.blit(image_poubelle, button_suppr_letres)
     pygame.draw.rect(fenetre,(220,0,0),button_ramene_lettre,border_radius=8)
     fenetre.blit(image_fleche,button_ramene_lettre)
@@ -699,8 +740,8 @@ for i in Joueur_actuel.letters:#création des objets lettres_visuel
 
 épaisseur_et_hauteur_lettres = 50
 for i in range(len(lettres)):#création des coordonée des lettres
-    x = (i * épaisseur_et_hauteur_lettres) + 230
-    y = 870
+    x = (i * épaisseur_et_hauteur_lettres) + 285
+    y = 855
     lettres[i].coord = (x,y)
     Joueur_actuel.letters[i].coord = (x,y)
 
@@ -721,11 +762,11 @@ pygame.display.flip()
 
 #création de tout les variables nécessaire pour le fonctionnement du jeu
 
-button_fin_partie = pygame.Rect(850, 850, 150, 50)
-button_mot_validé = pygame.Rect(600, 850, 150, 50)
-button_tour_passe = pygame.Rect(65, 850, 150, 50)
-button_suppr_letres = pygame.Rect(0, 870, 50, 50)
-button_ramene_lettre = pygame.Rect(775,870,50,50)
+button_fin_partie = pygame.Rect(850, 845, 175, 70)
+button_mot_validé = pygame.Rect(735, 845, 175, 70)
+button_tour_passe = pygame.Rect(95, 845, 175,  70)
+button_suppr_letres = pygame.Rect(10, 845, 70, 70)
+button_ramene_lettre = pygame.Rect(650,845,70, 70)
 compteur_tour_Joueur = 0
 compteur_lettre_poser_total = 0 
 lettre_select= None
@@ -830,12 +871,12 @@ while continuer:#boucle principale du jeu
         nombre_carre_noir = 7-len(lettres)
         x = 0
         for i in range (len(lettres)):
-            x = (i * épaisseur_et_hauteur_lettres) + 230
-            y = 870
+            x = (i * épaisseur_et_hauteur_lettres) + 285
+            y = 855
             lettres[i].coord = (x,y)
         for i in range (1,nombre_carre_noir+1):
-            x = 580 - (50 * i)
-            y = 870
+            x = 635 - (50 * i)
+            y = 855
             pygame.draw.rect(fenetre, couleur_fond, (x, y, 50,50))
             
     for i in cases_existantes :
