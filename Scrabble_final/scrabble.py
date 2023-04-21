@@ -298,8 +298,7 @@ def création_de_la_partie(fenetre):
             if event.type==pygame.QUIT:
                 continuer=False
             if event.type==pygame.KEYDOWN:
-                if event.key==pygame.K_RETURN or event.key==pygame.K_KP_ENTER:
-                    continuer=False
+                continuer=False
 
         règles=font4.render("Règles :", True, (255, 255, 255))
         fenetre.blit(règles,(taille_x/2- 170,25))
@@ -322,7 +321,7 @@ def création_de_la_partie(fenetre):
 
 
 
-        valider=font3.render("Pour continuer appuyer sur 'entrée'",True, (255, 255, 255))
+        valider=font3.render("Pour continuer appuyer sur une touche",True, (255, 255, 255))
         valide = pygame.Rect(235,820,550,50)
         pygame.draw.rect(fenetre,(0,130,0),valide,border_radius=14)
         fenetre.blit(valider,valider.get_rect(center = valide.center))
