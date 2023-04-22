@@ -427,7 +427,7 @@ def changer_tour():#permet de changer de joueur a chaque tour et donc de changer
     Joueur_actuel.letters.append(locals()[i.nom])
     for i in range(len(lettres)):#création des coordonées des lettres
         x = (i * épaisseur_et_hauteur_lettres) + 285
-        y = 855
+        y = 840
         lettres[i].coord = (x,y)
     historique_lettres = list(lettres)
     return lettres,Joueur_actuel
@@ -595,7 +595,7 @@ def retour_debut_du_tour():
     épaisseur_et_hauteur_lettres = 50
     for i in range(0,len(lettres)):#création des coordonée des lettres
         x = (i * épaisseur_et_hauteur_lettres) + 285
-        y = 855
+        y = 840
         lettres[i].coord = (x,y)
     case_occupé = historique_cases_occupé
     compteur_lettre_poser_dans_tour = 0
@@ -656,6 +656,7 @@ def afficher_aide(fenetre): #affichage des aides pour correspondance multiplicat
 
 def afficher_les_boutons(fenetre,button_tour_validé,button_tour_passe,button_suppr_letres,button_ramene_lettre,button_fin_partie):
     font_boutton = pygame.font.Font(None, 45)
+    font_boutton2 = pygame.font.Font(None, 35)
     text_valid = font_boutton.render("Valider", True, (255, 255, 255))
     text_rect = text_valid.get_rect(center = button_tour_validé.center)
     text_pass = font_boutton.render("Passer", True, (255, 255, 255))
@@ -672,6 +673,10 @@ def afficher_les_boutons(fenetre,button_tour_validé,button_tour_passe,button_su
     fenetre.blit(image_poubelle, button_suppr_letres)
     pygame.draw.rect(fenetre,(220,0,0),button_ramene_lettre,border_radius=8)
     fenetre.blit(image_fleche,button_ramene_lettre)
+    text_joueur=font_boutton2.render(Joueur_actuel.nom, True, (255, 255, 255))
+    rect=pygame.Rect(350,898, 220, 30)
+    rectt=pygame.draw.rect(fenetre,(0,50,0),rect,border_radius=8)
+    fenetre.blit(text_joueur,text_joueur.get_rect(center = rectt.center))
 
 def afficher_vainqueur(joueurs):
     BLANC = (255, 255, 255)
@@ -744,8 +749,7 @@ def verif_fin_de_partie():
 pygame.init()
 taille_x=1050
 taille_y=935
-taille_fenetere = (taille_x,taille_y)
-fenetre = pygame.display.set_mode(taille_fenetere)
+fenetre = pygame.display.set_mode((taille_x,taille_y))
 couleur_fond = (30,75,40)
 fenetre.fill(couleur_fond)#couleur du fond
 Joueurs = création_de_la_partie(fenetre)
@@ -764,7 +768,7 @@ for i in Joueur_actuel.letters:#création des objets lettres_visuel
 épaisseur_et_hauteur_lettres = 50
 for i in range(len(lettres)):#création des coordonée des lettres
     x = (i * épaisseur_et_hauteur_lettres) + 285
-    y = 855
+    y = 840
     lettres[i].coord = (x,y)
     Joueur_actuel.letters[i].coord = (x,y)
 
@@ -895,11 +899,11 @@ while continuer:#boucle principale du jeu
         x = 0
         for i in range (len(lettres)):
             x = (i * épaisseur_et_hauteur_lettres) + 285
-            y = 855
+            y = 840
             lettres[i].coord = (x,y)
         for i in range (1,nombre_carre_noir+1):
             x = 635 - (50 * i)
-            y = 855
+            y = 840
             pygame.draw.rect(fenetre, couleur_fond, (x, y, 50,50))
             
     for i in cases_existantes :
