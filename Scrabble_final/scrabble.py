@@ -316,7 +316,12 @@ def création_de_la_partie(fenetre):
         fenetre.blit(règle22,(((taille_x-règle22.get_width())/2)-80,305))
         fenetre.blit(image_fleche,image_fleche.get_rect(center = rouge.center))
 
-
+        règle31=font3.render("-La partie se termine quand il n'y a plus de ", True, (255, 255, 255))
+        règle32=font3.render(" tuiles dans le sac ou à la fin du tour après ", True, (255, 255, 255))
+        règle33=font3.render(" qu'un joueur ait passer son tour 3 fois", True, (255, 255, 255))
+        fenetre.blit(règle31,(((taille_x-règle31.get_width())/2)-20,390))
+        fenetre.blit(règle32,(((taille_x-règle32.get_width())/2)-20,425))
+        fenetre.blit(règle33,(((taille_x-règle33.get_width())/2)-20,460))
 
         valider=font3.render("Appuyer sur une touche pour continuer",True, (255, 255, 255))
         valide = pygame.Rect((taille_x-610)/2,taille_y-100,610,55)
@@ -711,7 +716,10 @@ def afficher_vainqueur(joueurs):
     pygame.draw.rect(fenetre, (10,50,25), rectpts ,border_radius=20)
 
     y_points=380
-    for i in Joueurs:
+    
+    joueurs_tries = sorted(joueurs, key=lambda joueur: joueur.points, reverse=True)
+
+    for i in joueurs_tries:
         points=i.nom+"  :  "+str(i.points)+" points"
         texte_points = pygame.font.SysFont('KAZYcase scrabble', 35).render(points, True, (255,255,255))
         fenetre.blit(texte_points,((taille_x-texte_points.get_width())/2,y_points))
