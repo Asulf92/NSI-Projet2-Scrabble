@@ -279,16 +279,13 @@ def création_de_la_partie(fenetre):
     global taille_y,taille_x,couleur_fond
     pygame.display.set_caption("SCRABBLE")
     font = pygame.font.SysFont('KAZYcase scrabble', 25)
-    font2=pygame.font.SysFont('KAZYcase scrabble', 29)
+    font2=pygame.font.SysFont('KAZYcase scrabble', 35)
     font3=pygame.font.SysFont('KAZYcase scrabble', 45)
     font4=pygame.font.SysFont('KAZYcase scrabble', 100)
 
-
-
-
-    carre_2_j = pygame.Rect((taille_x/2)-147,(taille_y/2)-105, 60, 35)
-    carre_3_j = pygame.Rect((taille_x/2)-70,(taille_y/2)-105, 60, 35)
-    carre_4_j = pygame.Rect((taille_x/2)+5,(taille_y/2)-105, 60, 35)
+    carre_2_j = pygame.Rect(((taille_x-60)/2)-120,((taille_y-35)/2-100), 60, 50)
+    carre_3_j = pygame.Rect(((taille_x-60)/2),((taille_y-35)/2-100), 60, 50)
+    carre_4_j = pygame.Rect(((taille_x-60)/2)+120,((taille_y-35)/2-100), 60, 50)
 
     continuer = True
     while continuer: #Affichages des règles / choses à savoir
@@ -301,28 +298,28 @@ def création_de_la_partie(fenetre):
                 continuer=False
 
         règles=font4.render("Règles :", True, (255, 255, 255))
-        fenetre.blit(règles,(taille_x/2- 170,25))
+        fenetre.blit(règles,(((taille_x-règles.get_width())/2), 30))
 
-        règle11=font3.render("-Pour passer son tour il faut d'abord avoir", True, (255, 255, 255))
-        règle12=font3.render(" défaussé une carte dans la poubelle:", True, (255, 255, 255))
-        image_poubelle = pygame.transform.scale(pygame.image.load("poubelle.png"),(67,65))
-        fenetre.blit(règle11,(30,150))
-        fenetre.blit(règle12,(30,185))
-        fenetre.blit(image_poubelle,(635,150))
+        règle11=font3.render("-Il faut d'abord avoir défaussé", True, (255, 255, 255))
+        règle12=font3.render(" une tuile pour passer son tour :", True, (255, 255, 255))
+        image_poubelle = pygame.transform.scale(pygame.image.load("poubelle.png"),(80,70))
+        fenetre.blit(règle11,(((taille_x-règle11.get_width())/2)-50,150))
+        fenetre.blit(règle12,(((taille_x-règle12.get_width())/2)-50,185))
+        fenetre.blit(image_poubelle,(((taille_x-règles.get_width())/2)+325,145))
 
-        règle21=font3.render("-Pour ramener les lettres de la poubelle", True, (255, 255, 255))
-        règle22=font3.render(" ou du plateau vers votre main :", True, (255, 255, 255))
+        règle21=font3.render("-Pour ramener les tuiles défaussées ou", True, (255, 255, 255))
+        règle22=font3.render(" placées ce tour vers votre chevalet :", True, (255, 255, 255))
         image_fleche = pygame.transform.scale(pygame.image.load('icons8-flèche-bas-50.png'),(70,68))
-        rouge = pygame.Rect(625,267,67,70)
+        rouge = pygame.Rect(((taille_x-67)/2)+260,267,67,70)
         pygame.draw.rect(fenetre,(180,0,0),rouge,border_radius=10)
-        fenetre.blit(règle21,(30,270))
-        fenetre.blit(règle22,(30,305))
+        fenetre.blit(règle21,(((taille_x-règle21.get_width())/2)-80,270))
+        fenetre.blit(règle22,(((taille_x-règle22.get_width())/2)-80,305))
         fenetre.blit(image_fleche,image_fleche.get_rect(center = rouge.center))
 
 
 
-        valider=font3.render("Pour continuer appuyer sur une touche",True, (255, 255, 255))
-        valide = pygame.Rect(235,820,550,50)
+        valider=font3.render("Appuyer sur une touche pour continuer",True, (255, 255, 255))
+        valide = pygame.Rect((taille_x-610)/2,taille_y-100,610,55)
         pygame.draw.rect(fenetre,(0,130,0),valide,border_radius=14)
         fenetre.blit(valider,valider.get_rect(center = valide.center))
         
@@ -346,20 +343,23 @@ def création_de_la_partie(fenetre):
                     nbr_joueur = 4
 
         text = font3.render("Combien de joueurs êtes vous?", True, (255, 255, 255))
-        text_2_j = font.render("2", True, (255, 255, 255))
-        text_3_j = font.render("3", True, (255, 255, 255))
-        text_4_j = font.render("4", True, (255, 255, 255))
-        fenetre.blit(text, (255,420))
-        pygame.draw.rect(fenetre, (0, 0, 0), carre_2_j,border_radius=8)
+        text_2_j = font2.render("2", True, (255, 255, 255))
+        text_3_j = font2.render("3", True, (255, 255, 255))
+        text_4_j = font2.render("4", True, (255, 255, 255))
+        
+        fenetre.blit(text, ((taille_x-text.get_width())/2,(taille_y-text.get_height())/2-20))
+
+
+        pygame.draw.rect(fenetre, (0, 0, 0), carre_2_j,border_radius=10)
         fenetre.blit(text_2_j, text_2_j.get_rect(center = carre_2_j.center))
-        pygame.draw.rect(fenetre, (0, 0, 0), carre_3_j,border_radius=8)
+        pygame.draw.rect(fenetre, (0, 0, 0), carre_3_j,border_radius=10)
         fenetre.blit(text_3_j, text_3_j.get_rect(center = carre_3_j.center))
-        pygame.draw.rect(fenetre, (0, 0, 0), carre_4_j,border_radius=8)
+        pygame.draw.rect(fenetre, (0, 0, 0), carre_4_j,border_radius=10)
         fenetre.blit(text_4_j, text_4_j.get_rect(center = carre_4_j.center))
 
         pygame.display.flip()
 
-    nom_carré=pygame.Rect(316, 355, 400, 30)
+    nom_carré=pygame.Rect((taille_x-400)/2,((taille_y-30)/2)-100, 400, 30)
     nomjoueur=''
     continuer=True
     joueurs=[]
@@ -367,10 +367,10 @@ def création_de_la_partie(fenetre):
     r=0
     while continuer and r!=nbr_joueur: #Choix des pseudos des joueurs
         fenetre.fill(couleur_fond)
-        text=font3.render("Entrez le nom des joueurs dans l'ordre",True,(255,255,255))
-        text2=font3.render("  des tours (8 caractères maximum) ",True,(255,255,255))
-        fenetre.blit(text,(235,400))
-        fenetre.blit(text2,(247,440))
+        text=font3.render(" Entrez le nom des joueurs dans l'ordre",True,(255,255,255))
+        text2=font3.render("des tours (8 caractères maximum)",True,(255,255,255))
+        fenetre.blit(text,(((taille_x-text.get_width())/2),((taille_y-text.get_height())/2)-45))
+        fenetre.blit(text2,(((taille_x-text2.get_width())/2),((taille_y-text2.get_height())/2)))
         for i in range (0,nbr_joueur):
             for event in pygame.event.get():
                 if event.type==pygame.QUIT:
@@ -378,6 +378,8 @@ def création_de_la_partie(fenetre):
                 if event.type==pygame.KEYDOWN:
                     if event.key==pygame.K_RETURN or event.key==pygame.K_KP_ENTER:
                         if len(nomjoueur)<=8:
+                            if nomjoueur=="":
+                                nomjoueur=f"Joueur {r+1}"
                             nomsjoueurs.append(nomjoueur)
                             nomjoueur=""
                             r+=1
@@ -391,7 +393,7 @@ def création_de_la_partie(fenetre):
             text_affiché=font.render(nomjoueur+"| Invalide (trop long) ",True,(255,130,130))
         else:
             text_affiché=font.render(nomjoueur+"|",True,(255,255,255))
-        fenetre.blit(text_affiché,(322,361))
+        fenetre.blit(text_affiché,(((taille_x-400)/2)+6,((taille_y-30)/2)-94))
         pygame.draw.rect(fenetre,(255,255,255),nom_carré,3)
         pygame.display.flip()
     for i in range (0,nbr_joueur):
@@ -399,7 +401,6 @@ def création_de_la_partie(fenetre):
     return joueurs
 
 def changer_tour():#permet de changer de joueur a chaque tour et donc de changer les lettres a afficher
-
     global nbr_joueur,historique_point_Joueur ,compteur_tour,autorisation_passer_tour, compteur_tour_Joueur,case_occupé,historique_cases_occupé , case_occupé_ce_tour,historique_lettres
 
     historique_cases_occupé = list(case_occupé)
@@ -425,20 +426,27 @@ def changer_tour():#permet de changer de joueur a chaque tour et donc de changer
         lettres[i].coord = (x,y)
     historique_lettres = list(lettres)
     return lettres,Joueur_actuel
-#afficher un ecran noir a chaque changement de tour pour éviter la triche
-def cacher_ecran_changement_tour(fenetre):
+
+def cacher_ecran_changement_tour(fenetre): #afficher un ecran noir a chaque changement de tour pour éviter la triche
     fenetre.fill(couleur_fond)
-    message_surface = font.render("cliquer pour continuer", True, (255, 255, 255))
-    message_rect = message_surface.get_rect()
-    message_rect.center = fenetre.get_rect().center
+    voyelles=("a","e","i","o","u","y")
+    if Joueur_actuel.nom.lower()!="":
+        if Joueur_actuel.nom.lower()[0] in voyelles:
+            message_surface = font.render(f"Au tour d'{Joueur_actuel.nom}", True, (255, 255, 255))
+        else :
+            message_surface = font.render(f"Au tour de {Joueur_actuel.nom}", True, (255, 255, 255))
+    else :
+        message_surface = font.render(f"Au tour du joueur suivant", True, (255, 255, 255))
     continuer = True
+    texte_x = (fenetre.get_width() - message_surface.get_width()) // 2
+    texte_y = (fenetre.get_height() - message_surface.get_height()) // 2
     while continuer:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:#Pour quitter le jeu
                 continuer = False
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 continuer = False
-        fenetre.blit(message_surface, message_rect)
+        fenetre.blit(message_surface,(texte_x,texte_y-50))
         pygame.display.flip()
 
 def test_mot_valide():
@@ -533,21 +541,14 @@ def test_mot_valide():
             if mot_valible_verif(mot_test_actuel):
                 return True
             else :                
-                font = pygame.font.SysFont('KAZYcase scrabble', 25)
-                text = font.render("Voulez vous ajouter ce mot au dictionnaire", True, (255, 255, 255))
+                font = pygame.font.SysFont('KAZYcase scrabble', 35)
+                font2 = pygame.font.SysFont('KAZYcase scrabble', 45)
+                text = font2.render("Voulez vous ajouter ce mot au dictionnaire ?", True, (255, 255, 255))
                 text_oui = font.render("oui", True, (255, 255, 255))
                 text_non = font.render("non", True, (255, 255, 255))
+                carr_oui = pygame.Rect((taille_x-80)/2-55, (taille_y-55)/2, 63, 45)
+                carr_non = pygame.Rect((taille_x-80)/2+55, (taille_y-55)/2, 63, 45)
 
-                grand_carré = pygame.Rect(400, 310, 300, 150)
-                carr_oui = pygame.Rect(465, 425, 60, 35)
-                carr_non = pygame.Rect(585, 425, 60, 35)
-
-                pygame.draw.rect(fenetre, couleur_fond, grand_carré)
-                fenetre.blit(text, text.get_rect(center = grand_carré.center))
-                pygame.draw.rect(fenetre, (0, 0, 0), carr_oui)
-                fenetre.blit(text_oui, text_oui.get_rect(center = carr_oui.center))
-                pygame.draw.rect(fenetre, (0, 0, 0), carr_non)
-                fenetre.blit(text_non, text_non.get_rect(center = carr_non.center))
                 continuer = True
                 while continuer:
                     fenetre.fill(couleur_fond)
@@ -563,11 +564,10 @@ def test_mot_valide():
                                 retour_debut_du_tour()
                                 return False
 
-                    pygame.draw.rect(fenetre, couleur_fond, grand_carré)
-                    fenetre.blit(text, text.get_rect(center = grand_carré.center))
-                    pygame.draw.rect(fenetre, (0,0,0), carr_oui)
+                    fenetre.blit(text, ((taille_x-text.get_width())/2,(taille_y-text.get_height())/2-70))
+                    pygame.draw.rect(fenetre, (0,0,0), carr_oui,border_radius=15)
                     fenetre.blit(text_oui, text_oui.get_rect(center = carr_oui.center))
-                    pygame.draw.rect(fenetre, (0, 0, 0), carr_non)
+                    pygame.draw.rect(fenetre, (0, 0, 0), carr_non,border_radius=15)
                     fenetre.blit(text_non, text_non.get_rect(center = carr_non.center))
                     pygame.display.flip()
 
@@ -678,30 +678,46 @@ def afficher_vainqueur(joueurs):
     points_max = max([joueur.points for joueur in joueurs])
     joueurs_points_max = [joueur for joueur in joueurs if joueur.points == points_max]
 
-    if len(joueurs_points_max) == 1:
+    if len(joueurs_points_max) == 1: #Si il y a un gagnant
         vainqueur = joueurs_points_max[0]
         points_vainqueur = vainqueur.points
         nom_vainqueur = vainqueur.nom
 
-        font = pygame.font.SysFont(None, 48)
-        texte = font.render("Le vainqueur est " + nom_vainqueur + " avec " + str(points_vainqueur) + " points !", True, NOIR)
-        texte_rect = texte.get_rect(center=(taille_fenetre[0] // 2, taille_fenetre[1] // 2))
+        font = pygame.font.SysFont(None, 60)
+        texte = font.render(f"{nom_vainqueur} a gagné !", True, NOIR)
         fenetre.fill(BLANC)
-        fenetre.blit(texte, texte_rect)
+        fenetre.blit(texte, ((taille_x-texte.get_width())/2,100))
 
-    else:
-        font = pygame.font.SysFont(None, 36)
-        texte = font.render("Il y a égalité entre les joueurs suivants :", True, NOIR)
-        texte_rect = texte.get_rect(center=(taille_fenetre[0] // 2, taille_fenetre[1] // 2 - 50))
+
+    else: #si il y en a plusieur
+        font = pygame.font.SysFont(None, 50)
         fenetre.fill(BLANC)
-        fenetre.blit(texte, texte_rect)
+        if len(joueurs_points_max)==2:
+            text=f"{joueurs_points_max[0].nom} et {joueurs_points_max[1].nom} sont à égalité !"
+        if len(joueurs_points_max)==3:
+            text=f"{joueurs_points_max[0].nom}, {joueurs_points_max[1].nom} et {joueurs_points_max[2].nom} sont à égalité !"
+        if len(joueurs_points_max)==4:
+            text=f"Vous êtes tous à égalité !"
+        texte=font.render(text,True, (0,0,0))
+        fenetre.blit(texte, ((taille_x-texte.get_width())/2, 100))
 
-        y = taille_fenetre[1] // 2
-        for joueur in joueurs_points_max:
-            texte = font.render(joueur.nom + " avec " + str(joueur.points) + " points", True, NOIR)
-            texte_rect = texte.get_rect(center=(taille_fenetre[0] // 2, y))
-            fenetre.blit(texte, texte_rect)
-            y += 50
+
+    entete_points = pygame.font.SysFont('KAZYcase scrabble', 52).render("Tableau des scores", True, (255,255,255))
+    pygame.draw.rect(fenetre, (5,25,15), pygame.Rect((taille_x-700)/2, 240, 700, (len(Joueurs)+1)*85 +65),border_radius=16)
+    fenetre.blit(entete_points,((taille_x-entete_points.get_width())/2,275))
+
+
+    rectpts=pygame.Rect((taille_x-700)/2+50,340, 600, 85*len(Joueurs))
+    pygame.draw.rect(fenetre, (10,50,25), rectpts ,border_radius=20)
+
+    y_points=380
+    for i in Joueurs:
+        points=i.nom+"  :  "+str(i.points)+" points"
+        texte_points = pygame.font.SysFont('KAZYcase scrabble', 35).render(points, True, (255,255,255))
+        fenetre.blit(texte_points,((taille_x-texte_points.get_width())/2,y_points))
+        y_points+=75
+
+
 
     pygame.display.flip()
 
