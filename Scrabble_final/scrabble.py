@@ -98,7 +98,6 @@ def mot_valible_verif(mot):#vérifier la validité d'un mot*
     global alphabet
     with open('mots_acceptes.csv', 'r', encoding='utf-8') as fichier:
         for ligne in fichier:
-            for i in range(len(mot)):
                 for a in alphabet:
                     if mot.replace("_",a).upper() in ligne:
                         print(mot.replace("_",a).upper())
@@ -109,13 +108,13 @@ def ajouter_au_mot_valides(mot):#ajoute le mot aux mots valides
     print(mot)
     with open('mots_acceptes.csv', 'a', encoding='utf-8') as fichier:
         csv_writer = csv.writer(fichier)
-        csv_writer.writerow([mot.upper()])
+        csv_writer.writerow([mot.upper(),"","","","",""])
 
 def ajouter_aux_mots_invalide(mot):#ajoute le mot aux mots invalides
-    with open('mots_refuses.csv', 'w', encoding='utf-8') as fichier:
+    with open('mots_refuses.csv', 'a', encoding='utf-8') as fichier:
         csv_writer = csv.writer(fichier)
-        csv_writer.writerow([mot])
-#definition de toutes les variable nécessaire a certaine fonction 
+        csv_writer.writerow([mot.upper(),"","","","",""])
+#definition de toutes les variable nécessaire a certaine fonction
 score_du_mot = 0
 historique_lettres = []
 historique_cases = []
@@ -331,7 +330,7 @@ def création_de_la_partie(fenetre):
         valide = pygame.Rect((taille_x-610)/2,taille_y-100,610,55)
         pygame.draw.rect(fenetre,(0,130,0),valide,border_radius=14)
         fenetre.blit(valider,valider.get_rect(center = valide.center))
-        
+
         pygame.display.flip()
 
     continuer = True
@@ -355,7 +354,7 @@ def création_de_la_partie(fenetre):
         text_2_j = font2.render("2", True, (255, 255, 255))
         text_3_j = font2.render("3", True, (255, 255, 255))
         text_4_j = font2.render("4", True, (255, 255, 255))
-        
+
         fenetre.blit(text, ((taille_x-text.get_width())/2,(taille_y-text.get_height())/2-20))
 
 
@@ -549,10 +548,12 @@ def test_mot_valide():
                     return False
             if mot_valible_verif(mot_test_actuel):
                 return True
-            else :                
+            else :
+
+                compteurMotAccept = 0
                 font = pygame.font.SysFont('KAZYcase scrabble', 35)
                 font2 = pygame.font.SysFont('KAZYcase scrabble', 45)
-                text = font2.render("Voulez vous ajouter ce mot au dictionnaire ?", True, (255, 255, 255))
+                text = font2.render(f"Voulez vous ajouter ce mot au dictionnaire : {mot_test_actuel} ?", True, (255, 255, 255))
                 text_oui = font.render("oui", True, (255, 255, 255))
                 text_non = font.render("non", True, (255, 255, 255))
                 carr_oui = pygame.Rect((taille_x-80)/2-55, (taille_y-55)/2, 63, 45)
@@ -567,7 +568,10 @@ def test_mot_valide():
                         elif event.type == pygame.MOUSEBUTTONDOWN:#quand l'utilisateur clique sur son clique gauche on récupere la mosition de la souris
                             if carr_oui.collidepoint(event.pos):
                                 ajouter_au_mot_valides(mot_test_actuel)
-                                return True
+                                compteurMotAccept +=1
+                                if compteurMotAccept == len(lst_mots):
+                                    return True
+                                continuer = False
                             if carr_non.collidepoint(event.pos):
                                 ajouter_aux_mots_invalide(mot_test_actuel)
                                 retour_debut_du_tour()
@@ -612,7 +616,7 @@ def definir_couleur_bouton_passer_tour(autorisation_passer_tour):
         return (70, 201, 31)
     else:
         return (105,105,105)
-    
+
 def verif_autorisation_valid_mot(compteur_lettre_poser_dans_tour,compteur_tour):
     return (compteur_lettre_poser_dans_tour >= 2 and compteur_tour == 0) or (compteur_lettre_poser_dans_tour >=1 and not(compteur_tour==0))
 
@@ -725,7 +729,7 @@ def afficher_vainqueur(joueurs):
     pygame.draw.rect(fenetre, (10,50,25), rectpts ,border_radius=20)
 
     y_points=380
-    
+
     joueurs_tries = sorted(joueurs, key=lambda joueur: joueur.points, reverse=True)
 
     for i in joueurs_tries:
@@ -799,7 +803,7 @@ button_tour_passe = pygame.Rect(95, 845, 175,  70)
 button_suppr_letres = pygame.Rect(10, 845, 70, 70)
 button_ramene_lettre = pygame.Rect(650,845,70, 70)
 compteur_tour_Joueur = 0
-compteur_lettre_poser_total = 0 
+compteur_lettre_poser_total = 0
 lettre_select= None
 compteur_tour_une_action = None
 compteur_tour = 0
@@ -867,14 +871,14 @@ while continuer:#boucle principale du jeu
                                 if pp.nom == lettre_select.nom:
                                     Joueur_actuel.letters.remove(Joueur_actuel.letters[compteur_b-1])
                             break
-                        
+
             for i in lettres:#on vérifie que cette position correspond a la position d'une lettre et on les échanges permet donc de changer l'orde des lettres
                 x, y = i.coord
                 if (x <= mouse_x <= x + épaisseur_et_hauteur_lettres) and (y <= mouse_y <= y + épaisseur_et_hauteur_lettres) and ((mouse_x, mouse_y) != lettre_select.coord):
                     lettre_select.coord, i.coord = i.coord, lettre_select.coord
                     lettre_select= None
                     break
-                
+
             if autorisation_poser_lettre :
                 for case in cases_existantes:
                     if case.verif_autorisation_poser_et_ajout_de_la_lettre_dans_la_case((mouse_x,mouse_y),lettre_select,case_adjacentes_possible) :#vérifier si la case est occupé et ajout de la lettre dans la case si non
@@ -894,10 +898,10 @@ while continuer:#boucle principale du jeu
     afficher_points_joueurs(fenetre)
     afficher_aide(fenetre)
     verif_fin_de_partie()
-    
+
     for lettre in lettres :
         lettre.afficher_lettre(fenetre)
-#si il a moins de 7 lettres change les coordonées afin d'eviter les trous entre les lettres
+    #si il a moins de 7 lettres change les coordonées afin d'eviter les trous entre les lettres
     if len(lettres)!=7:
         nombre_carre_noir = 7-len(lettres)
         x = 0
@@ -909,11 +913,11 @@ while continuer:#boucle principale du jeu
             x = 635 - (50 * i)
             y = 840
             pygame.draw.rect(fenetre, couleur_fond, (x, y, 50,50))
-            
+
     for i in cases_existantes :
         i.afficher_case(fenetre)
-        
-#si l'utilisateur selectionne une lettre on la fait suivre la souris
+
+    #si l'utilisateur selectionne une lettre on la fait suivre la souris
     if not(lettre_select == None) :
         lettre_select.suivre_souris(fenetre)
     pygame.display.flip()
