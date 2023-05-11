@@ -99,7 +99,7 @@ def mot_valible_verif(mot):#vérifier la validité d'un mot*
     with open('mots_acceptes.csv', 'r', encoding='utf-8') as fichier:
         for ligne in fichier:
                 for a in alphabet:
-                    if mot.replace("_",a).upper() in ligne:
+                    if mot.replace("_",a).upper() in ligne.split(","):
                         print(mot.replace("_",a).upper())
                         return True
     return False
@@ -276,7 +276,6 @@ class Case:#définition de la classe case visuel permettant de gérer leur visue
             points = font_chiffre.render(str(self.occupé.points),True,(0,0,0))
             fenetre.blit(lettre, (x+9,y+9))
             fenetre.blit(points,(x+35,y+35))
-
 
 def création_de_la_partie(fenetre):
     global taille_y,taille_x,couleur_fond
@@ -459,7 +458,6 @@ def cacher_ecran_changement_tour(fenetre): #afficher un ecran noir a chaque chan
 
 def test_mot_valide():
     def trouver_mot_ecris():
-
         def remonter_premier_lettre(avance,case):
             place_case_dans_cases_existantes = cases_existantes.index(case)
             case_actuellement_test = case
