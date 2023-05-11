@@ -94,11 +94,15 @@ class Sac: #création du sac contenant toutes les lettres et n'etant pas infini
             afficher_vainqueur(Joueurs)
 sac = Sac()
 
-def mot_valible_verif(mot):#vérifier la validité d'un mot
+def mot_valible_verif(mot):#vérifier la validité d'un mot*
+    global alphabet
     with open('mots_acceptes.csv', 'r', encoding='utf-8') as fichier:
         for ligne in fichier:
-            if mot.upper() in ligne:
-                return True
+            for i in range(len(mot)):
+                for a in alphabet:
+                    if mot.replace("_",a).upper() in ligne:
+                        print(mot.replace("_",a).upper())
+                        return True
     return False
 
 def ajouter_au_mot_valides(mot):#ajoute le mot aux mots valides
